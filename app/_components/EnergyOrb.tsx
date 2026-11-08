@@ -49,6 +49,9 @@ export default function OnexaOrb({
     if (!ctx) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const lowPower =
+      window.matchMedia("(max-width: 768px)").matches ||
+      (navigator.hardwareConcurrency || 8) <= 4;
 
     /* ---------- seeded random, so the orb is identical on every load ---------- */
     const rng = (seed: number) => () => {
@@ -79,8 +82,8 @@ export default function OnexaOrb({
     ];
 
     /* ---------- filaments: closed 3D curves wrapped around a sphere ---------- */
-    const N = 240; // points per filament
-    const CH = 8; // points per drawn chunk (each chunk gets its own brightness)
+    const N = lowPower ? 144 : 240; // points per filament
+    const CH = lowPower ? 12 : 8; // points per drawn chunk (each chunk gets its own brightness)
     const curves: Curve[] = [];
 
     const addCurve = (
@@ -105,7 +108,7 @@ export default function OnexaOrb({
     };
 
     // 1. Wave bands: weave above and below a tilted equator (the knotted look).
-    for (let c = 0; c < 24; c++) {
+    for (let c = 0; c < (lowPower ? 14 : 24); c++) {
       const mm = randRot();
       const k = 2 + Math.floor(rand() * 4);
       const A = 0.45 + rand() * 0.75;
@@ -124,7 +127,7 @@ export default function OnexaOrb({
     }
 
     // 2. Small circles: flat rings pressed onto the sphere at random tilts (the rosette).
-    for (let c = 0; c < 20; c++) {
+    for (let c = 0; c < (lowPower ? 10 : 20); c++) {
       const mm = randRot();
       const al = 0.55 + rand() * 0.8;
       const sc = 0.8 + rand() * 0.22;
@@ -139,7 +142,7 @@ export default function OnexaOrb({
     }
 
     // 3. Inner filaments: smaller and dimmer, they give the orb its depth.
-    for (let c = 0; c < 8; c++) {
+    for (let c = 0; c < (lowPower ? 4 : 8); c++) {
       const mm = randRot();
       const al = 0.7 + rand() * 0.7;
       const sc = 0.52 + rand() * 0.24;
@@ -155,7 +158,7 @@ export default function OnexaOrb({
 
     /* ---------- stardust ---------- */
     const stars: Star[] = [];
-    for (let i = 0; i < 280; i++) {
+    for (let i = 0; i < (lowPower ? 110 : 280); i++) {
       const u = rand(), v = rand(), w = rand();
       const th = u * 6.283;
       const ph = Math.acos(2 * v - 1);
@@ -175,11 +178,11 @@ export default function OnexaOrb({
     let W = 0, H = 0, dpr = 1, R = 100, cx = 0, cy = 0, lw = 1;
     let yaw = 0.6, pitch = -0.35;
     const AUTO = reduce ? 0 : 0.16; // radians per second
-    let needs = true;
     let prev = 0;
     let raf = 0;
     let lastDraw = 0;
     let visible = true;
+    let running = false;
     const FRAME_INTERVAL = 1000 / 30;
     const X = new Float32Array(N + 1);
     const Y = new Float32Array(N + 1);
@@ -188,7 +191,7 @@ export default function OnexaOrb({
 
     const resize = () => {
       const r = poster.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 1.5);
       W = r.width;
       H = r.height;
       cv.width = Math.round(W * dpr);
@@ -198,18 +201,18 @@ export default function OnexaOrb({
       cx = W / 2;
       cy = H * 0.417;
       lw = Math.max(0.7, Math.min(1.3, R / 120));
-      needs = true;
     };
-    const ro = new ResizeObserver(resize);
+    const ro = new ResizeObserver(() => {
+      resize();
+      if (reduce) draw(0);
+    });
     ro.observe(poster);
     resize();
 
     const visibility = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      if (visible) {
-        prev = 0;
-        needs = true;
-      }
+      if (visible) start();
+      else stop();
     });
     visibility.observe(poster);
 
@@ -299,30 +302,44 @@ export default function OnexaOrb({
     };
 
     const frame = (now: number) => {
-      if (document.hidden || !visible) {
-        prev = 0;
-        raf = requestAnimationFrame(frame);
-        return;
-      }
+      if (!running) return;
       const dt = prev ? Math.min(0.05, (now - prev) / 1000) : 0.016;
       prev = now;
       yaw += AUTO * dt;
-      if (!reduce && now - lastDraw >= FRAME_INTERVAL) {
-        draw(reduce ? 0 : now / 1000);
+      if (now - lastDraw >= FRAME_INTERVAL) {
+        draw(now / 1000);
         lastDraw = now;
-        needs = false;
-      } else if (reduce && needs) {
-        draw(0);
-        needs = false;
       }
       raf = requestAnimationFrame(frame);
     };
-    raf = requestAnimationFrame(frame);
+
+    function start() {
+      if (running || reduce || document.hidden || !visible) return;
+      running = true;
+      prev = 0;
+      raf = requestAnimationFrame(frame);
+    }
+
+    function stop() {
+      running = false;
+      cancelAnimationFrame(raf);
+      prev = 0;
+    }
+
+    const onDocumentVisibility = () => {
+      if (document.hidden) stop();
+      else start();
+    };
+    document.addEventListener("visibilitychange", onDocumentVisibility);
+
+    if (reduce) draw(0);
+    else start();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       ro.disconnect();
       visibility.disconnect();
+      document.removeEventListener("visibilitychange", onDocumentVisibility);
     };
   }, []);
 
