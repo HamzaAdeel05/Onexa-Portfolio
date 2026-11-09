@@ -324,7 +324,7 @@ export default function ContactSection() {
             </div>
 
             <span className="text-xs text-white/30">
-              © {new Date().getFullYear()} ONEXA. All rights reserved.
+            © 2026 ONEXA. All rights reserved.
             </span>
           </div>
 
