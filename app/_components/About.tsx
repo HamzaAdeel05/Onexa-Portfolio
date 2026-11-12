@@ -60,11 +60,11 @@ export default function AboutSection() {
           }`}
         >
           <h2 className="text-[clamp(42px,7vw,92px)] leading-[1.08] font-medium tracking-[-4px]">
-            Not just building
-            <span className="text-[#829c86]"> technology.</span>
+            ONE VISION.
             <br />
-            Building what&apos;s
-            <span className="text-[#829c86]"> next.</span>
+            <span className="text-[#35d98a]">LIMITLESS</span>
+            <br />
+            POSSIBILITIES.
           </h2>
         </div>
 

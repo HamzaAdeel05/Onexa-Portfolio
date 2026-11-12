@@ -1,238 +1,40 @@
-
 "use client";
 
-const features = [
-  {
-    number: "01",
-    title: "Pro Designer",
-    subtitle: "DESIGN WITH PURPOSE",
-    description:
-      "We create distinctive digital experiences that combine creativity, clarity and functionality. Every detail has a purpose.",
-    theme: "green",
-    visual: "design",
-  },
-  {
-    number: "02",
-    title: "Future-Ready Technology",
-    subtitle: "BUILT FOR WHAT'S NEXT",
-    description:
-      "From OPI² and intelligent systems to modern software, we build technology that helps businesses move forward.",
-    theme: "red",
-    visual: "technology",
-  },
-  {
-    number: "03",
-    title: "Fast & Efficient Execution",
-    subtitle: "IDEAS INTO ACTION",
-    description:
-      "We value your time. Our focus is on clear planning, efficient execution and delivering practical solutions without unnecessary complexity.",
-    theme: "green",
-    visual: "execution",
-  },
-  {
-    number: "04",
-    title: "Perfection Until You're Satisfied",
-    subtitle: "DETAILS MAKE THE DIFFERENCE",
-    description:
-      "Your feedback matters. We refine, improve and polish every solution with you until it meets the vision we set out to achieve.",
-    theme: "red",
-    visual: "perfection",
-  },
+import { motion, useReducedMotion } from "framer-motion";
+
+const services = [
+  { n: "01", title: "AI & Intelligent Automation", text: "Turn repetitive work and complex decisions into purposeful, intelligent workflows.", mark: "AI" },
+  { n: "02", title: "Software Development", text: "Build reliable digital products with thoughtful engineering from the first line of code.", mark: "{}" },
+  { n: "03", title: "Web Development", text: "Create expressive, responsive websites and web applications made for real people.", mark: "WEB" },
+  { n: "04", title: "Custom Digital Solutions", text: "Shape technology around the challenge, with a solution designed to fit your needs.", mark: "↗" },
 ];
 
-function Visual({ type }: { type: string }) {
-  if (type === "design") {
-    return (
-      <div className="relative flex h-full min-h-44 items-center justify-center">
-        <div className="absolute h-36 w-36 rotate-45 border border-emerald-300/20 transition-all duration-700 group-hover:rotate-90 group-hover:scale-110" />
-        <div className="absolute h-28 w-28 -rotate-12 rounded-2xl border border-emerald-300/30 transition-all duration-700 group-hover:rotate-12 group-hover:scale-110" />
-        <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-emerald-300 text-4xl font-light text-black shadow-[0_0_50px_rgba(110,231,183,0.15)] transition-all duration-700 group-hover:rotate-12 group-hover:scale-110">
-          ✳
-        </div>
-        <span className="absolute left-[20%] top-8 text-emerald-300/50 transition-transform duration-500 group-hover:-translate-y-3">✦</span>
-        <span className="absolute bottom-7 right-[20%] text-emerald-300/50 transition-transform duration-500 group-hover:translate-y-3">✧</span>
-      </div>
-    );
-  }
-
-  if (type === "technology") {
-    return (
-      <div className="relative flex h-full min-h-44 items-center justify-center">
-        <div className="absolute h-36 w-36 rounded-full border border-rose-300/20 transition-all duration-700 group-hover:scale-125 group-hover:border-rose-300/50" />
-        <div className="absolute h-28 w-28 rounded-full border border-dashed border-rose-300/40 animate-[spin_18s_linear_infinite] group-hover:animate-[spin_4s_linear_infinite]" />
-        <div className="absolute h-20 w-20 rounded-full bg-rose-400/10 blur-xl transition-all duration-500 group-hover:bg-rose-400/30" />
-        <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl border border-rose-300/40 bg-rose-300/10 font-mono text-2xl text-rose-200 transition-all duration-500 group-hover:rotate-45">
-          O²
-        </div>
-        <span className="absolute right-[22%] top-8 text-xs text-rose-300/60">01</span>
-        <span className="absolute bottom-7 left-[22%] text-xs text-rose-300/60">∞</span>
-      </div>
-    );
-  }
-
-  if (type === "execution") {
-    return (
-      <div className="relative flex h-full min-h-44 items-center justify-center">
-        <div className="flex items-center gap-3 transition-all duration-500 group-hover:scale-110">
-          <div className="h-12 w-12 rounded-xl border border-emerald-300/30 bg-emerald-300/10 transition-all duration-500 group-hover:-translate-y-4" />
-          <div className="flex flex-col gap-2">
-            <div className="h-px w-10 bg-emerald-300/70 transition-all duration-500 group-hover:w-16" />
-            <div className="h-px w-16 bg-emerald-300/30" />
-            <div className="h-px w-10 bg-emerald-300/70 transition-all duration-500 group-hover:w-16" />
-          </div>
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-emerald-300/40 bg-emerald-300/10 text-3xl text-emerald-200 transition-all duration-500 group-hover:rotate-12 group-hover:scale-110">
-            →
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className="h-px w-10 bg-emerald-300/70 transition-all duration-500 group-hover:w-16" />
-            <div className="h-px w-16 bg-emerald-300/30" />
-            <div className="h-px w-10 bg-emerald-300/70 transition-all duration-500 group-hover:w-16" />
-          </div>
-          <div className="h-12 w-12 rounded-xl border border-emerald-300/30 bg-emerald-300/10 transition-all duration-500 group-hover:translate-y-4" />
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative flex h-full min-h-44 items-center justify-center">
-      <div className="absolute h-36 w-36 rounded-full border border-rose-300/20 transition-all duration-700 group-hover:scale-110" />
-      <div className="absolute h-28 w-28 rounded-full border border-dashed border-rose-300/40 animate-[spin_20s_linear_infinite] group-hover:animate-[spin_5s_linear_infinite]" />
-      <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-rose-300/40 bg-rose-300/10 text-3xl text-rose-200 transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(251,113,133,0.2)]">
-        ✓
-      </div>
-      <span className="absolute right-[20%] top-8 text-rose-300/60">✦</span>
-      <span className="absolute bottom-8 left-[20%] text-rose-300/60">✧</span>
-    </div>
-  );
+function NetworkVisual({ index }: { index: number }) {
+  if (index === 0) return <svg viewBox="0 0 200 140" className="h-32 w-48 text-[#35d98a]" fill="none" aria-hidden="true"><path d="M35 70 78 34l48 22 40-28M35 70l42 42 49-24 40 26M78 34l-1 78m49-56 0 32m40-82v108" stroke="currentColor" strokeOpacity=".42"/><circle cx="35" cy="70" r="5" fill="currentColor"/><circle cx="78" cy="34" r="6" fill="currentColor"/><circle cx="126" cy="56" r="9" fill="currentColor" fillOpacity=".6"/><circle cx="166" cy="28" r="4" fill="currentColor"/><circle cx="77" cy="112" r="4" fill="currentColor"/><circle cx="126" cy="88" r="6" fill="currentColor"/><circle cx="166" cy="114" r="5" fill="currentColor"/></svg>;
+  if (index === 1) return <div aria-hidden="true" className="font-mono text-5xl tracking-[-0.15em] text-[#35d98a]/65">&lt; / &gt;</div>;
+  if (index === 2) return <div aria-hidden="true" className="relative h-24 w-40 border border-[#35d98a]/40 bg-[#35d98a]/[0.04] p-3"><div className="mb-3 flex gap-1"><i className="h-1.5 w-1.5 rounded-full bg-[#35d98a]/70"/><i className="h-1.5 w-1.5 rounded-full bg-white/20"/><i className="h-1.5 w-1.5 rounded-full bg-white/20"/></div><div className="h-px w-3/4 bg-white/20"/><div className="mt-3 grid grid-cols-3 gap-2"><i className="h-8 border border-[#35d98a]/20 bg-[#35d98a]/10"/><i className="h-8 border border-white/10"/><i className="h-8 border border-[#35d98a]/20 bg-[#35d98a]/10"/></div></div>;
+  return <div aria-hidden="true" className="relative flex h-28 w-40 items-center justify-center"><div className="absolute h-24 w-24 rotate-45 border border-[#35d98a]/30 transition-transform duration-700 group-hover:rotate-[65deg]"/><div className="absolute h-20 w-20 rounded-[42%_58%_61%_39%] border border-[#35d98a]/60 bg-[#16a05a]/10 transition-transform duration-700 group-hover:scale-110"/><span className="relative text-2xl text-[#35d98a]">✳</span></div>;
 }
 
 export default function ServicesSection() {
-  return (
-    <section
-      id="services"
-      className="relative overflow-hidden bg-[#090a09] px-5 py-24 text-white sm:px-8 lg:px-16 lg:py-32"
-    >
-      <div className="pointer-events-none absolute -left-40 top-20 h-96 w-96 rounded-full bg-emerald-500/[0.06] blur-[130px]" />
-
-      <div className="relative mx-auto max-w-7xl">
-        {/* Heading */}
-        <div className="mb-14 flex flex-col justify-between gap-8 md:flex-row md:items-end">
-          <div>
-            <div className="mb-5 flex items-center gap-3">
-              <span className="h-px w-8 bg-emerald-300" />
-              <span className="text-xs uppercase tracking-[0.3em] text-emerald-300">
-                03 / Why ONEXA
-              </span>
-            </div>
-
-            <h2 className="text-4xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">
-              What makes us
-              <br />
-              <span className="text-white/40">different.</span>
-            </h2>
-          </div>
-
-          <p className="max-w-sm text-sm leading-7 text-white/50 sm:text-base">
-            Great solutions begin with understanding. We bring together
-            creativity, technology and execution to solve real business
-            challenges.
-          </p>
-        </div>
-
-        {/* Feature grid */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {features.map((feature) => {
-            const green = feature.theme === "green";
-
-            return (
-              <article
-                key={feature.number}
-                className="group relative grid min-h-[430px] grid-cols-1 overflow-hidden rounded-2xl border border-white/10 bg-[#111311] transition-all duration-500 hover:-translate-y-1 hover:border-white/25 hover:bg-[#151815] sm:grid-cols-[1fr_0.9fr]"
-              >
-                <div
-                  className={`pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full blur-[90px] transition-all duration-700 ${
-                    green
-                      ? "bg-emerald-400/[0.04] group-hover:bg-emerald-400/[0.13]"
-                      : "bg-rose-400/[0.04] group-hover:bg-rose-400/[0.13]"
-                  }`}
-                />
-
-                {/* Text area */}
-                <div className="relative z-10 flex flex-col p-7 sm:p-8 lg:p-10">
-                  <div className="flex items-center justify-between">
-                    <span className={`font-mono text-sm ${green ? "text-emerald-300" : "text-rose-300"}`}>
-                      / {feature.number}
-                    </span>
-                    <span className="text-[10px] tracking-[0.2em] text-white/30">
-                      ONEXA
-                    </span>
-                  </div>
-
-                  <div className="mt-auto pt-14">
-                    <span className={`text-[10px] font-medium tracking-[0.22em] ${green ? "text-emerald-300/70" : "text-rose-300/70"}`}>
-                      {feature.subtitle}
-                    </span>
-
-                    <h3 className="mt-4 max-w-sm text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-                      {feature.title}
-                    </h3>
-
-                    <p className="mt-5 max-w-sm text-sm leading-7 text-white/45 transition-colors duration-300 group-hover:text-white/70">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Visual area */}
-                <div className="relative min-h-44 sm:min-h-full">
-                  <Visual type={feature.visual} />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#111311] via-transparent to-transparent sm:bg-gradient-to-r sm:from-[#111311]/60 sm:via-transparent sm:to-transparent" />
-                </div>
-
-                {/* Animated bottom border */}
-                <div className={`absolute bottom-0 left-0 h-[2px] w-0 transition-all duration-700 group-hover:w-full ${green ? "bg-emerald-300" : "bg-rose-300"}`} />
-              </article>
-            );
-          })}
-        </div>
-
-        {/* Business-first message */}
-        <div className="relative mt-5 overflow-hidden rounded-2xl border border-white/10 bg-[#111311] p-8 sm:p-12 lg:p-16">
-          <div className="pointer-events-none absolute -right-20 -top-32 h-80 w-80 rounded-full bg-emerald-400/[0.08] blur-[100px]" />
-
-          <div className="relative max-w-4xl">
-            <span className="text-xs uppercase tracking-[0.3em] text-emerald-300">
-              Our vision
-            </span>
-
-            <h3 className="mt-6 text-3xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              Your business problem is{" "}
-              <span className="text-emerald-300">our problem.</span>
-            </h3>
-
-            <p className="mt-7 max-w-3xl text-base leading-8 text-white/50">
-              No matter what industry you're in or what challenge you're
-              facing, we want to understand it. Our vision is simple:
-              make business easier through meaningful solutions. We don't
-              believe every business needs the same technology. We believe
-              every business deserves the right solution.
-            </p>
-
-            <p className="mt-7 text-sm font-medium tracking-wide text-white/80">
-              Your challenge. Our responsibility. A solution built together.
-            </p>
-
-            <a
-              href="#contact"
-              className="group mt-9 inline-flex items-center gap-4 rounded-full border border-emerald-300/30 bg-emerald-300/10 px-6 py-4 text-sm text-emerald-200 transition-all duration-300 hover:bg-emerald-300 hover:text-black"
-            >
-              Let's solve it together
-              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </a>
-          </div>
-        </div>
+  const reducedMotion = useReducedMotion();
+  return <section id="services" className="relative overflow-hidden bg-[#101813] px-5 py-28 text-white sm:px-8 lg:px-16">
+    <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-10 h-[500px] w-[500px] rounded-full bg-[#16a05a]/[0.07] blur-[140px]" />
+    <div className="relative mx-auto max-w-7xl">
+      <motion.div initial={reducedMotion ? false : { opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-16 max-w-3xl">
+        <div className="mb-6 flex items-center gap-3"><span className="h-px w-10 bg-[#35d98a]"/><span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#35d98a]">02 / What we do</span></div>
+        <h2 className="text-4xl font-medium leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">IDEAS INTO<br/><span className="text-[#35d98a]">INTELLIGENCE.</span></h2>
+        <p className="mt-6 max-w-xl text-sm leading-7 text-[#9aa79e] sm:text-base">Transforming complex challenges into intelligent digital solutions.</p>
+      </motion.div>
+      <div className="border-t border-white/10">
+        {services.map((service, index) => <motion.article key={service.n} initial={reducedMotion ? false : { opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.55, delay: reducedMotion ? 0 : index * 0.06 }} className="group grid min-h-[190px] grid-cols-[42px_1fr] items-center gap-4 border-b border-white/10 py-8 sm:grid-cols-[64px_1.1fr_1fr_200px] sm:gap-6 sm:py-10">
+          <span className="self-start pt-2 font-mono text-xs text-[#35d98a]/60">/{service.n}</span>
+          <h3 className="text-xl font-medium leading-tight tracking-tight transition-colors group-hover:text-[#70e4a7] sm:text-2xl lg:text-3xl">{service.title}</h3>
+          <p className="col-start-2 max-w-md text-sm leading-6 text-white/45 sm:col-start-auto">{service.text}</p>
+          <div className="col-start-2 flex h-24 items-center justify-center overflow-hidden sm:col-start-auto"><NetworkVisual index={index}/></div>
+        </motion.article>)}
       </div>
-    </section>
-  );
+      <a href="#contact" className="mt-9 inline-flex items-center gap-4 text-xs uppercase tracking-[0.18em] text-[#35d98a] transition-colors hover:text-white">Find the right solution <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>;
 }

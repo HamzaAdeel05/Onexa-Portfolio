@@ -6,43 +6,39 @@ import { motion, useReducedMotion } from "framer-motion";
 const technologies = [
   {
     id: "01",
-    title: "AI & Intelligence",
-    description:
-      "Intelligent systems that understand, analyze, and assist.",
-    tools: ["Python", "LLMs", "AI Agents", "LangChain"],
+    title: "3D & Rendering",
+    description: "The planetary environment and visual effects rendered directly in the browser.",
+    tools: ["Three.js", "React Three Fiber", "Drei"],
     icon: "✳",
     position: "top",
     color: "green",
   },
   {
     id: "02",
-    title: "Automation",
-    description:
-      "Smarter workflows that reduce repetitive work and improve efficiency.",
-    tools: ["n8n", "APIs", "Workflow Design", "Integrations"],
+    title: "Motion & Scroll",
+    description: "Scroll-linked motion and interface transitions, with reduced-motion support.",
+    tools: ["Framer Motion", "GSAP", "ScrollTrigger"],
     icon: "⌘",
     position: "right",
-    color: "red",
+    color: "green",
   },
   {
     id: "03",
-    title: "Web Engineering",
-    description:
-      "Modern digital products built for performance and usability.",
-    tools: ["React", "Next.js", "TypeScript", "Tailwind"],
+    title: "Web Experience",
+    description: "Responsive interface components and layouts designed for different screens.",
+    tools: ["Next.js", "React", "Tailwind CSS"],
     icon: "</>",
     position: "bottom",
     color: "green",
   },
   {
     id: "04",
-    title: "Data & Integration",
-    description:
-      "Connected systems that turn information into useful insights.",
-    tools: ["MongoDB", "FastAPI", "REST APIs", "Databases"],
+    title: "Delivery & Interaction",
+    description: "Native scrolling and edge delivery keep the experience smooth and widely available.",
+    tools: ["Lenis", "WebGL", "Cloudflare Workers"],
     icon: "◈",
     position: "left",
-    color: "red",
+    color: "green",
   },
 ];
 
@@ -82,17 +78,15 @@ export default function TechnologySection() {
           </div>
 
           <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight sm:text-6xl lg:text-7xl">
-            Powered by technology.
+            Built with technology.
             <br />
             <span className="text-[#65B989]">
-              Driven by intelligence.
+              Tuned for experience.
             </span>
           </h2>
 
           <p className="mt-7 max-w-xl text-sm leading-7 text-white/45 sm:text-base">
-            We combine modern engineering, artificial intelligence,
-            automation, and connected technologies to create
-            smarter digital experiences.
+            The tools behind this experience, from its procedural planet to the motion system and responsive interface.
           </p>
         </motion.div>
 
@@ -339,10 +333,7 @@ export default function TechnologySection() {
 
             <div>
               <p className="text-sm leading-8 text-white/55 sm:text-base">
-                OPI² represents our vision for personalized intelligence:
-                bringing AI capabilities, automation, and connected systems
-                together to create experiences that adapt to individual
-                needs and business goals.
+                OPI² is ONEXA&apos;s personalized intelligence concept: a vision for bringing artificial intelligence and automation together in more personal digital experiences.
               </p>
 
               <div className="mt-8 flex items-center gap-3">

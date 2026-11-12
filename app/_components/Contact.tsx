@@ -26,7 +26,7 @@ export default function Contact() {
 
   return (
     <section
-      id="about"
+      id="philosophy"
       className="relative overflow-hidden bg-[#090B09] px-5 py-28 text-white sm:px-8 lg:px-16"
     >
       {/* Ambient background */}
@@ -237,6 +237,7 @@ export default function Contact() {
 
         {/* OPI² highlight */}
         <motion.div
+          id="opi2"
           initial={reducedMotion ? false : { opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

@@ -2,72 +2,79 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const steps = [
   {
     number: "01",
-    title: "Discovery",
-    subtitle: "Understanding the vision",
+    title: "Discover",
+    subtitle: "Understand the challenge",
     description:
-      "Every great project starts with an idea. We understand your goals, audience, challenges, and vision before making a move.",
-    tag: "Research & Strategy",
+      "Understand the problem, your goals, and the vision behind the project.",
+    tag: "Problem & Vision",
     symbol: "◎",
     accent: "green",
   },
   {
     number: "02",
-    title: "Planning",
-    subtitle: "Building the roadmap",
+    title: "Strategize",
+    subtitle: "Choose the right approach",
     description:
-      "We transform your ideas into a clear strategy, define the requirements, and establish a roadmap for successful execution.",
-    tag: "Strategy & Roadmap",
+      "Plan the right technology, scope, and path to a useful solution.",
+    tag: "Technology & Approach",
     symbol: "⌘",
     accent: "red",
   },
   {
     number: "03",
-    title: "Design",
-    subtitle: "Creating the experience",
+    title: "Build",
+    subtitle: "Turn the plan into a product",
     description:
-      "We craft intuitive interfaces, thoughtful user experiences, and distinctive visual identities that make your brand stand out.",
-    tag: "UI/UX & Creativity",
+      "Develop the experience and systems needed to solve the defined challenge.",
+    tag: "Design & Engineering",
     symbol: "✳",
     accent: "green",
   },
   {
     number: "04",
-    title: "Development",
-    subtitle: "Bringing ideas to life",
+    title: "Refine",
+    subtitle: "Test and improve",
     description:
-      "Our team turns approved designs into functional digital experiences using modern technologies, intelligent systems, and clean code.",
-    tag: "Engineering & AI",
+      "Test, optimize, and improve the work through careful iteration.",
+    tag: "Quality & Optimization",
     symbol: "</>",
     accent: "red",
   },
   {
     number: "05",
-    title: "Testing",
-    subtitle: "Refining every detail",
+    title: "Deliver",
+    subtitle: "Launch with confidence",
     description:
-      "We test, optimize, and refine every element to ensure performance, reliability, usability, and a seamless experience.",
-    tag: "Quality & Performance",
+      "Prepare the finished solution for launch and support its next steps.",
+    tag: "Launch & Support",
     symbol: "✓",
     accent: "green",
-  },
-  {
-    number: "06",
-    title: "Launch",
-    subtitle: "Taking it to the world",
-    description:
-      "Once everything is ready, we launch your solution and help you move forward with confidence, support, and room to grow.",
-    tag: "Delivery & Growth",
-    symbol: "↗",
-    accent: "red",
   },
 ];
 
 export default function ProcessSection() {
   const reducedMotion = useReducedMotion();
+  const progressRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (reducedMotion !== false || !progressRef.current) return;
+    gsap.registerPlugin(ScrollTrigger);
+    const context = gsap.context(() => {
+      gsap.fromTo(progressRef.current, { scaleX: 0 }, {
+        scaleX: 1,
+        ease: "none",
+        scrollTrigger: { trigger: progressRef.current, start: "top 90%", end: "bottom 10%", scrub: 0.6 },
+      });
+    });
+    return () => context.revert();
+  }, [reducedMotion]);
 
   return (
     <section
@@ -91,20 +98,20 @@ export default function ProcessSection() {
             <div className="mb-6 flex items-center gap-3">
               <span className="h-px w-10 bg-[#3F9B68]" />
               <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#65B989]">
-                Our Process / 06
+                Our Process / 03
               </span>
             </div>
 
             <h2 className="max-w-3xl text-4xl font-medium leading-tight tracking-tight sm:text-5xl lg:text-7xl">
-              How we turn
+              FROM VISION
               <br />
-              <span className="text-[#65B989]">ideas into impact.</span>
+              <span className="text-[#65B989]">TO REALITY.</span>
             </h2>
           </div>
 
           <p className="max-w-sm text-sm leading-7 text-white/50 sm:text-base">
             Great results don't happen by accident. They happen through
-            a thoughtful process, creative thinking, and precise execution.
+              A clear, collaborative process gives every project a considered path from first conversation to launch.
           </p>
         </motion.div>
 
@@ -123,10 +130,14 @@ export default function ProcessSection() {
           <div className="flex items-center gap-3">
             <span className="h-2 w-2 animate-pulse rounded-full bg-[#65B989]" />
             <span className="text-xs text-white/60">
-              06 Steps · One Vision
+              05 Steps · One Vision
             </span>
           </div>
         </motion.div>
+
+        <div aria-hidden="true" className="mb-10 h-px w-full origin-left bg-white/10">
+          <div ref={progressRef} className="h-px w-full origin-left bg-gradient-to-r from-[#16a05a] via-[#35d98a] to-[#a51f32]" />
+        </div>
 
         {/* Process cards */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

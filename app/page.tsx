@@ -10,14 +10,14 @@ import TechnologySection from "./_components/TechnologySection";
 
 export default function Home() {
   return (
-    <main>
+    <main id="main-content" tabIndex={-1}>
       <HeroSections />
-      <AboutSection />
       <ServicesSection />
       <ProcessSection />
-      <SelectedWork />
+      <AboutSection />
       <Contact />
       <TechnologySection />
+      <SelectedWork />
       <ContactSection />
     </main>
   );

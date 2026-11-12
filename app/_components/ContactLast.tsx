@@ -10,6 +10,7 @@ export default function ContactSection() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    company: "",
     service: "Web Development",
     message: "",
   });
@@ -22,7 +23,7 @@ export default function ContactSection() {
     );
 
     const body = encodeURIComponent(
-      `Name: ${form.name}\nEmail: ${form.email}\nService: ${form.service}\n\nProject Details:\n${form.message}`
+      `Name: ${form.name}\nEmail: ${form.email}\nCompany: ${form.company || "Not provided"}\nService: ${form.service}\n\nProject Details:\n${form.message}`
     );
 
     window.location.href =
@@ -129,26 +130,10 @@ export default function ContactSection() {
             {/* Social links */}
             <div className="mt-auto border-t border-white/10 pt-8">
               <span className="mb-5 block text-xs uppercase tracking-[0.2em] text-white/35">
-                Follow Our Journey
+                Connect with ONEXA
               </span>
 
-              <div className="flex flex-wrap gap-3">
-                {[
-                  { name: "Instagram", url: "https://instagram.com/" },
-                  { name: "LinkedIn", url: "https://linkedin.com/" },
-                  { name: "GitHub", url: "https://github.com/" },
-                ].map((social) => (
-                  <a
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-full border border-white/10 px-5 py-3 text-xs text-white/55 transition-all duration-300 hover:border-[#65B989]/50 hover:text-[#65B989]"
-                  >
-                    {social.name} ↗
-                  </a>
-                ))}
-              </div>
+              <a href="mailto:info@onexa.com" className="inline-flex items-center gap-2 rounded-full border border-white/10 px-5 py-3 text-xs text-white/55 transition-all duration-300 hover:border-[#65B989]/50 hover:text-[#65B989]">Email ONEXA <span aria-hidden="true">↗</span></a>
             </div>
           </motion.div>
 
@@ -176,12 +161,13 @@ export default function ContactSection() {
 
               {/* Name */}
               <div>
-                <label className="mb-3 block text-xs text-white/50">
+                <label htmlFor="contact-name" className="mb-3 block text-xs text-white/50">
                   Your Name
                 </label>
 
                 <input
                   required
+                  id="contact-name"
                   type="text"
                   placeholder="John Doe"
                   value={form.name}
@@ -194,12 +180,13 @@ export default function ContactSection() {
 
               {/* Email */}
               <div>
-                <label className="mb-3 block text-xs text-white/50">
+                <label htmlFor="contact-email" className="mb-3 block text-xs text-white/50">
                   Email Address
                 </label>
 
                 <input
                   required
+                  id="contact-email"
                   type="email"
                   placeholder="john@company.com"
                   value={form.email}
@@ -210,13 +197,28 @@ export default function ContactSection() {
                 />
               </div>
 
+              {/* Optional company */}
+              <div>
+                <label htmlFor="contact-company" className="mb-3 block text-xs text-white/50">Company <span className="text-white/30">(optional)</span></label>
+                <input
+                  id="contact-company"
+                  type="text"
+                  autoComplete="organization"
+                  placeholder="Company name"
+                  value={form.company}
+                  onChange={(e) => setForm({ ...form, company: e.target.value })}
+                  className="w-full border-b border-white/15 bg-transparent py-3 text-sm text-white outline-none transition-colors placeholder:text-white/20 focus:border-[#65B989]"
+                />
+              </div>
+
               {/* Service */}
               <div>
-                <label className="mb-3 block text-xs text-white/50">
+                <label htmlFor="contact-service" className="mb-3 block text-xs text-white/50">
                   What are you looking for?
                 </label>
 
                 <select
+                  id="contact-service"
                   value={form.service}
                   onChange={(e) =>
                     setForm({ ...form, service: e.target.value })
@@ -234,12 +236,13 @@ export default function ContactSection() {
 
               {/* Message */}
               <div>
-                <label className="mb-3 block text-xs text-white/50">
+                <label htmlFor="contact-message" className="mb-3 block text-xs text-white/50">
                   Tell us about your project
                 </label>
 
                 <textarea
                   required
+                  id="contact-message"
                   rows={4}
                   placeholder="I have an idea for..."
                   value={form.message}
