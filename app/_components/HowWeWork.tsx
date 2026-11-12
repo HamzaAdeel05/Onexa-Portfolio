@@ -1,250 +1,152 @@
-
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const steps = [
+const WorkflowWorld = dynamic(() => import("./WorkflowWorld"), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_58%_48%,rgba(22,160,90,.12),transparent_60%)]" />,
+});
+
+const stages = [
   {
     number: "01",
-    title: "Discover",
-    subtitle: "Understand the challenge",
-    description:
-      "Understand the problem, your goals, and the vision behind the project.",
-    tag: "Problem & Vision",
-    symbol: "◎",
-    accent: "green",
+    title: "Understanding Before Building.",
+    description: "We explore your business, understand your challenges, and identify opportunities where technology can create meaningful impact.",
+    support: "Business / Challenges / Opportunity",
   },
   {
     number: "02",
-    title: "Strategize",
-    subtitle: "Choose the right approach",
-    description:
-      "Plan the right technology, scope, and path to a useful solution.",
-    tag: "Technology & Approach",
-    symbol: "⌘",
-    accent: "red",
+    title: "Turning Ideas Into Direction.",
+    description: "We define the right strategy, architecture, technologies, and implementation roadmap for your project.",
+    support: "Strategy / Architecture / Roadmap",
   },
   {
     number: "03",
-    title: "Build",
-    subtitle: "Turn the plan into a product",
-    description:
-      "Develop the experience and systems needed to solve the defined challenge.",
-    tag: "Design & Engineering",
-    symbol: "✳",
-    accent: "green",
+    title: "Giving Ideas Their Identity.",
+    description: "We create thoughtful interfaces, intuitive experiences, and structured product designs aligned with your vision.",
+    support: "Interface / Experience / Identity",
   },
   {
     number: "04",
-    title: "Refine",
-    subtitle: "Test and improve",
-    description:
-      "Test, optimize, and improve the work through careful iteration.",
-    tag: "Quality & Optimization",
-    symbol: "</>",
-    accent: "red",
+    title: "Engineering What Matters.",
+    description: "We build reliable, scalable, and intelligent digital solutions using carefully selected technologies.",
+    support: "Engineering / Integration / Quality",
   },
   {
     number: "05",
-    title: "Deliver",
-    subtitle: "Launch with confidence",
-    description:
-      "Prepare the finished solution for launch and support its next steps.",
-    tag: "Launch & Support",
-    symbol: "✓",
-    accent: "green",
+    title: "Built to Perform. Ready to Grow.",
+    description: "We launch, test, optimize, and continuously improve solutions to support your evolving business needs.",
+    support: "Launch / Optimization / Growth",
   },
 ];
 
 export default function ProcessSection() {
   const reducedMotion = useReducedMotion();
-  const progressRef = useRef<HTMLDivElement>(null);
+  const progress = useRef(0);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
-    if (reducedMotion !== false || !progressRef.current) return;
+    if (!stageRef.current) return;
     gsap.registerPlugin(ScrollTrigger);
+    let refreshTimer: number | undefined;
     const context = gsap.context(() => {
-      gsap.fromTo(progressRef.current, { scaleX: 0 }, {
-        scaleX: 1,
-        ease: "none",
-        scrollTrigger: { trigger: progressRef.current, start: "top 90%", end: "bottom 10%", scrub: 0.6 },
+      ScrollTrigger.create({
+        trigger: stageRef.current,
+        start: "top top",
+        end: () => `+=${window.innerHeight * stages.length}`,
+        pin: stageRef.current,
+        pinSpacing: true,
+        scrub: reducedMotion ? false : 0.7,
+        refreshPriority: -1,
+        invalidateOnRefresh: true,
+        onUpdate: (trigger) => {
+          progress.current = trigger.progress;
+          const index = Math.min(stages.length - 1, Math.floor(trigger.progress * stages.length));
+          setActive((current) => current === index ? current : index);
+        },
+        onRefresh: (trigger) => {
+          progress.current = trigger.progress;
+          const index = Math.min(stages.length - 1, Math.floor(trigger.progress * stages.length));
+          setActive((current) => current === index ? current : index);
+        },
       });
-    });
-    return () => context.revert();
+    }, stageRef);
+    // Services is also pinned and lazy-loads its ScrollTrigger. Refresh after its
+    // trigger is registered so this downstream pin measures the true document offset.
+    refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 250);
+    return () => {
+      if (refreshTimer !== undefined) window.clearTimeout(refreshTimer);
+      context.revert();
+    };
   }, [reducedMotion]);
 
-  return (
-    <section
-      id="process"
-      className="relative overflow-hidden bg-[#090B09] px-5 py-28 text-white sm:px-8 lg:px-16"
-    >
-      {/* Background details */}
-      <div className="pointer-events-none absolute -left-40 top-40 h-96 w-96 rounded-full bg-[#174B32]/10 blur-[120px]" />
-      <div className="pointer-events-none absolute -right-40 bottom-20 h-96 w-96 rounded-full bg-[#8B202C]/10 blur-[120px]" />
+  const current = stages[active];
 
-      <div className="relative mx-auto max-w-7xl">
-        {/* Section heading */}
-        <motion.div
-          initial={reducedMotion ? false : { opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7 }}
-          className="mb-16 flex flex-col justify-between gap-8 lg:flex-row lg:items-end"
-        >
-          <div>
-            <div className="mb-6 flex items-center gap-3">
-              <span className="h-px w-10 bg-[#3F9B68]" />
-              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#65B989]">
-                Our Process / 03
-              </span>
+  return (
+    <section id="process" className="relative overflow-x-clip bg-[#090d0b] text-[#f1f5f2]">
+      <div ref={stageRef} className="relative isolate grid h-[100svh] min-h-[590px] grid-cols-1 overflow-hidden bg-[#090d0b] lg:grid-cols-[.86fr_1.14fr]">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_76%_48%,rgba(21,59,41,.28),transparent_57%)]" />
+
+        <div className="pointer-events-none absolute inset-0 z-0 lg:left-auto lg:right-0 lg:w-[66%]">
+          <WorkflowWorld progress={progress} reducedMotion={Boolean(reducedMotion)} />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#090d0b] via-[#090d0b]/30 to-transparent lg:bg-gradient-to-r lg:from-[#090d0b] lg:via-[#090d0b]/20 lg:to-transparent" />
+          <div className="absolute right-5 top-24 text-[9px] uppercase tracking-[.22em] text-[#35d98a]/65 sm:right-8 lg:right-12 lg:top-10">ONEXA / DIGITAL CREATION ENGINE</div>
+          <div className="absolute bottom-[48%] right-5 font-mono text-[9px] tracking-[.16em] text-white/25 sm:right-8 lg:bottom-10 lg:right-12">FIG. {current.number} — PROCESS IN MOTION</div>
+        </div>
+
+        <div className="relative z-10 flex min-h-0 flex-col justify-end px-5 pb-16 pt-[42vh] sm:px-8 sm:pb-20 lg:col-start-1 lg:justify-center lg:px-12 lg:pb-12 lg:pt-24 xl:px-20">
+          <div className="mb-6 flex items-center gap-3 sm:mb-8">
+            <span className="h-px w-9 bg-[#35d98a]" />
+            <span className="text-[10px] font-semibold uppercase tracking-[.28em] text-[#35d98a]">Our Process / 03</span>
+          </div>
+          <h2 className="mb-8 text-4xl font-medium leading-[.98] tracking-tight sm:text-5xl lg:mb-12 lg:text-6xl xl:text-7xl">HOW WE<br/><span className="text-[#35d98a]">WORK.</span></h2>
+
+          <div className="flex gap-6 sm:gap-8">
+            <div className="relative flex w-8 shrink-0 flex-col items-center">
+              <div className="absolute bottom-2 top-2 w-px bg-white/15" />
+              <div className="absolute top-2 w-px origin-top bg-gradient-to-b from-[#35d98a] to-[#16a05a] transition-transform duration-300" style={{ height: "calc(100% - 16px)", transform: `scaleY(${active / (stages.length - 1)})` }} />
+              {stages.map((step, index) => <span key={step.number} className={`relative z-10 mb-auto flex h-4 w-4 items-center justify-center rounded-full border transition-all duration-300 last:mb-0 ${index === active ? "border-[#35d98a] bg-[#35d98a] shadow-[0_0_18px_rgba(53,217,138,.5)]" : index < active ? "border-[#16a05a] bg-[#16a05a]" : "border-white/25 bg-[#090d0b]"}`} aria-label={`Stage ${step.number}${index === active ? ", current" : ""}`} />)}
             </div>
 
-            <h2 className="max-w-3xl text-4xl font-medium leading-tight tracking-tight sm:text-5xl lg:text-7xl">
-              FROM VISION
-              <br />
-              <span className="text-[#65B989]">TO REALITY.</span>
-            </h2>
+            <div className="min-h-[214px] flex-1 sm:min-h-[230px]">
+              <div className="mb-3 flex items-center gap-4">
+                <span className="font-mono text-sm tracking-[.2em] text-[#35d98a]">{current.number}</span>
+                <span className="h-px w-8 bg-white/15" />
+                <span className="text-[9px] uppercase tracking-[.22em] text-white/40">{["Discover", "Strategize", "Design", "Develop", "Deploy & Evolve"][active]}</span>
+              </div>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={current.number}
+                  initial={reducedMotion ? false : { opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reducedMotion ? undefined : { opacity: 0, y: -12 }}
+                  transition={{ duration: reducedMotion ? 0 : 0.36, ease: "easeOut" }}
+                >
+                  <h3 className="max-w-xl text-2xl font-medium leading-[1.08] tracking-tight sm:text-3xl lg:text-[clamp(1.75rem,3vw,3.25rem)]">{current.title}</h3>
+                  <p className="mt-4 max-w-lg text-sm leading-7 text-[#9aa79e] sm:mt-5 sm:text-base">{current.description}</p>
+                  <p className="mt-5 text-[9px] uppercase tracking-[.18em] text-white/30 sm:mt-7">{current.support}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
 
-          <p className="max-w-sm text-sm leading-7 text-white/50 sm:text-base">
-            Great results don't happen by accident. They happen through
-              A clear, collaborative process gives every project a considered path from first conversation to launch.
-          </p>
-        </motion.div>
-
-        {/* Process overview */}
-        <motion.div
-          initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-10 flex flex-wrap items-center justify-between gap-4 border-y border-white/10 py-5"
-        >
-          <span className="text-xs uppercase tracking-[0.2em] text-white/40">
-            From concept to completion
-          </span>
-
-          <div className="flex items-center gap-3">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-[#65B989]" />
-            <span className="text-xs text-white/60">
-              05 Steps · One Vision
-            </span>
+          <div className="mt-8 flex items-center justify-between pl-14 sm:mt-10 sm:pl-16">
+            <span className="text-[9px] uppercase tracking-[.2em] text-white/35">Scroll to move through the system</span>
+            <span className="font-mono text-[10px] tracking-[.18em] text-white/50">{current.number} <span className="text-white/20">/ 05</span></span>
           </div>
-        </motion.div>
-
-        <div aria-hidden="true" className="mb-10 h-px w-full origin-left bg-white/10">
-          <div ref={progressRef} className="h-px w-full origin-left bg-gradient-to-r from-[#16a05a] via-[#35d98a] to-[#a51f32]" />
         </div>
+      </div>
 
-        {/* Process cards */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {steps.map((step, index) => {
-            const isGreen = step.accent === "green";
-
-            return (
-              <motion.div
-                key={step.number}
-                initial={
-                  reducedMotion ? false : { opacity: 0, y: 35 }
-                }
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                transition={{
-                  duration: 0.55,
-                  delay: reducedMotion ? 0 : index * 0.1,
-                }}
-                whileHover={reducedMotion ? undefined : { y: -7 }}
-                className="group relative flex min-h-[330px] flex-col overflow-hidden rounded-2xl border border-white/[0.09] bg-[#111411] p-7 transition-colors duration-500 hover:border-white/20 sm:p-8"
-              >
-                {/* Hover background */}
-                <div
-                  className={`pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full blur-[80px] transition-opacity duration-500 group-hover:opacity-100 ${
-                    isGreen
-                      ? "bg-[#28784A]/10 opacity-30"
-                      : "bg-[#A12D3B]/10 opacity-30"
-                  }`}
-                />
-
-                {/* Top row */}
-                <div className="relative mb-12 flex items-center justify-between">
-                  <span className="font-mono text-sm tracking-widest text-white/35">
-                    / {step.number}
-                  </span>
-
-                  <span
-                    className={`flex h-12 w-12 items-center justify-center rounded-xl border text-xl transition-all duration-500 group-hover:rotate-12 ${
-                      isGreen
-                        ? "border-[#3F9B68]/30 bg-[#174B32]/20 text-[#65B989]"
-                        : "border-[#A12D3B]/30 bg-[#641D29]/20 text-[#E47B86]"
-                    }`}
-                  >
-                    {step.symbol}
-                  </span>
-                </div>
-
-                {/* Card content */}
-                <div className="relative flex flex-1 flex-col">
-                  <span
-                    className={`mb-3 text-[10px] font-semibold uppercase tracking-[0.2em] ${
-                      isGreen ? "text-[#65B989]" : "text-[#E47B86]"
-                    }`}
-                  >
-                    {step.subtitle}
-                  </span>
-
-                  <h3 className="mb-4 text-3xl font-medium tracking-tight">
-                    {step.title}
-                  </h3>
-
-                  <p className="mb-8 text-sm leading-7 text-white/45">
-                    {step.description}
-                  </p>
-
-                  <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-5">
-                    <span className="text-[10px] uppercase tracking-[0.15em] text-white/40">
-                      {step.tag}
-                    </span>
-
-                    <span
-                      className={`text-xl transition-transform duration-300 group-hover:translate-x-1 ${
-                        isGreen ? "text-[#65B989]" : "text-[#E47B86]"
-                      }`}
-                    >
-                      →
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+      <div className="border-t border-white/[.07] bg-[#090d0b] px-5 py-7 sm:px-8 lg:px-16">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-[9px] uppercase tracking-[.22em] text-[#35d98a]/70">The ONEXA approach</span>
+          <span className="text-xs text-white/40">Built with purpose. Delivered with precision.</span>
         </div>
-
-        {/* Bottom statement */}
-        <motion.div
-          initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="mt-16 flex flex-col items-start justify-between gap-6 rounded-2xl border border-white/10 bg-[#111411] p-7 sm:flex-row sm:items-center sm:p-10"
-        >
-          <div>
-            <p className="mb-2 text-xs uppercase tracking-[0.25em] text-[#65B989]">
-              The ONEXA Approach
-            </p>
-
-            <h3 className="text-2xl font-medium sm:text-3xl">
-              One vision. Every detail matters.
-            </h3>
-          </div>
-
-          <div className="flex items-center gap-3 text-sm text-white/50">
-            <span className="h-2 w-2 rounded-full bg-[#65B989]" />
-            Built with purpose. Delivered with precision.
-          </div>
-        </motion.div>
       </div>
     </section>
   );
