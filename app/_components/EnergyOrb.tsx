@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Montserrat } from "next/font/google";
 import styles from "../OnexaOrb.module.css";
-
-const montserrat = Montserrat({ subsets: ["latin"], weight: "500" });
 
 type Props = {
   /** Wordmark shown at the bottom of the poster. */
@@ -50,8 +47,8 @@ export default function OnexaOrb({
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const lowPower =
-      window.matchMedia("(max-width: 768px)").matches ||
-      (navigator.hardwareConcurrency || 8) <= 4;
+      window.matchMedia("(max-width: 900px)").matches ||
+      (navigator.hardwareConcurrency || 8) <= 6;
 
     /* ---------- seeded random, so the orb is identical on every load ---------- */
     const rng = (seed: number) => () => {
@@ -82,8 +79,8 @@ export default function OnexaOrb({
     ];
 
     /* ---------- filaments: closed 3D curves wrapped around a sphere ---------- */
-    const N = lowPower ? 144 : 240; // points per filament
-    const CH = lowPower ? 12 : 8; // points per drawn chunk (each chunk gets its own brightness)
+    const N = lowPower ? 96 : 128; // points per filament
+    const CH = 16; // fewer canvas paths per frame
     const curves: Curve[] = [];
 
     const addCurve = (
@@ -108,7 +105,7 @@ export default function OnexaOrb({
     };
 
     // 1. Wave bands: weave above and below a tilted equator (the knotted look).
-    for (let c = 0; c < (lowPower ? 14 : 24); c++) {
+    for (let c = 0; c < (lowPower ? 9 : 13); c++) {
       const mm = randRot();
       const k = 2 + Math.floor(rand() * 4);
       const A = 0.45 + rand() * 0.75;
@@ -127,7 +124,7 @@ export default function OnexaOrb({
     }
 
     // 2. Small circles: flat rings pressed onto the sphere at random tilts (the rosette).
-    for (let c = 0; c < (lowPower ? 10 : 20); c++) {
+    for (let c = 0; c < (lowPower ? 6 : 8); c++) {
       const mm = randRot();
       const al = 0.55 + rand() * 0.8;
       const sc = 0.8 + rand() * 0.22;
@@ -142,7 +139,7 @@ export default function OnexaOrb({
     }
 
     // 3. Inner filaments: smaller and dimmer, they give the orb its depth.
-    for (let c = 0; c < (lowPower ? 4 : 8); c++) {
+    for (let c = 0; c < (lowPower ? 2 : 3); c++) {
       const mm = randRot();
       const al = 0.7 + rand() * 0.7;
       const sc = 0.52 + rand() * 0.24;
@@ -158,7 +155,7 @@ export default function OnexaOrb({
 
     /* ---------- stardust ---------- */
     const stars: Star[] = [];
-    for (let i = 0; i < (lowPower ? 110 : 280); i++) {
+    for (let i = 0; i < (lowPower ? 55 : 90); i++) {
       const u = rand(), v = rand(), w = rand();
       const th = u * 6.283;
       const ph = Math.acos(2 * v - 1);
@@ -183,7 +180,7 @@ export default function OnexaOrb({
     let lastDraw = 0;
     let visible = true;
     let running = false;
-    const FRAME_INTERVAL = 1000 / 30;
+    const FRAME_INTERVAL = 1000 / 24;
     const X = new Float32Array(N + 1);
     const Y = new Float32Array(N + 1);
     const D = new Float32Array(N + 1);
@@ -191,13 +188,13 @@ export default function OnexaOrb({
 
     const resize = () => {
       const r = poster.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 1.5);
+      dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 1.25);
       W = r.width;
       H = r.height;
       cv.width = Math.round(W * dpr);
       cv.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      R = W * 0.265;
+      R = Math.min(W * 0.265, H * 0.22);
       cx = W / 2;
       cy = H * 0.417;
       lw = Math.max(0.7, Math.min(1.3, R / 120));
@@ -230,9 +227,10 @@ export default function OnexaOrb({
 
       // soft halo hugging the shell
       const g = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * 1.6);
-      g.addColorStop(0, "rgba(112,150,255,0)");
-      g.addColorStop(0.3, "rgba(112,150,255,0.10)");
-      g.addColorStop(1, "rgba(112,150,255,0)");
+      g.addColorStop(0, "rgba(90,210,255,0)");
+      g.addColorStop(0.28, "rgba(90,210,255,0.11)");
+      g.addColorStop(0.62, "rgba(151,105,255,0.07)");
+      g.addColorStop(1, "rgba(90,210,255,0)");
       ctx.fillStyle = g;
       ctx.beginPath();
       ctx.arc(cx, cy, R * 1.6, 0, 6.2832);
@@ -265,7 +263,7 @@ export default function OnexaOrb({
           ctx.moveTo(X[a], Y[a]);
           for (let q = a + 1; q <= b; q++) ctx.lineTo(X[q], Y[q]);
           ctx.lineWidth = cu.w * lw * 4.5;
-          ctx.strokeStyle = `rgba(112,150,255,${(alpha * 0.15).toFixed(3)})`;
+          ctx.strokeStyle = `rgba(87,205,255,${(alpha * 0.21).toFixed(3)})`;
           ctx.stroke();
           ctx.lineWidth = cu.w * lw;
           ctx.strokeStyle = `rgba(236,243,255,${alpha.toFixed(3)})`;
@@ -287,12 +285,12 @@ export default function OnexaOrb({
         const tw = 0.5 + 0.5 * Math.sin(t * st.tr + st.tw);
         const al = (0.2 + 0.8 * tw) * (0.3 + 0.7 * dd);
         const rad = st.size * lw;
-        ctx.fillStyle = `rgba(225,234,255,${al.toFixed(3)})`;
+        ctx.fillStyle = `rgba(225,241,255,${al.toFixed(3)})`;
         ctx.beginPath();
         ctx.arc(px, py, rad, 0, 6.2832);
         ctx.fill();
         if (st.big) {
-          ctx.fillStyle = `rgba(150,180,255,${(al * 0.22).toFixed(3)})`;
+          ctx.fillStyle = `rgba(170,132,255,${(al * 0.24).toFixed(3)})`;
           ctx.beginPath();
           ctx.arc(px, py, rad * 4, 0, 6.2832);
           ctx.fill();
@@ -352,7 +350,10 @@ export default function OnexaOrb({
         role="img"
         aria-label="A slowly rotating sphere of interwoven glowing filaments and stardust."
       />
-      <div className={`${styles.label} ${montserrat.className}`}>{label}</div>
+      <div className={styles.label}>
+        <span className={styles.wordmark}>{label}</span>
+        <span className={styles.subtitle}>Personalized Intelligence</span>
+      </div>
     </div>
   );
 }

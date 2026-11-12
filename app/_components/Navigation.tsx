@@ -12,17 +12,21 @@ const links = [
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
+  const [introPassed, setIntroPassed] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const update = () => setScrolled(window.scrollY > 24);
+    const update = () => {
+      setScrolled(window.scrollY > 24);
+      setIntroPassed(window.scrollY >= window.innerHeight * 0.58);
+    };
     update();
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
   }, []);
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${scrolled ? "border-white/10 bg-[#090d0b]/85 shadow-lg shadow-black/10 backdrop-blur-xl" : "border-transparent bg-transparent"}`}>
+    <header aria-hidden={!introPassed} inert={!introPassed} className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-500 ${introPassed ? "translate-y-0 opacity-100" : "-translate-y-3 opacity-0 pointer-events-none"} ${scrolled ? "border-white/10 bg-[#090d0b]/85 shadow-lg shadow-black/10 backdrop-blur-xl" : "border-transparent bg-transparent"}`}>
       <nav aria-label="Main navigation" className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between px-5 sm:px-8 lg:px-14">
         <a href="#home" onClick={() => setOpen(false)} className="text-xl font-semibold tracking-[0.18em] text-[#f1f5f2]" aria-label="ONEXA home">
           ONE<span className="text-[#35d98a]">XA</span><span className="text-[#a51f32]">.</span>

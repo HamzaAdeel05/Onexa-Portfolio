@@ -1,8 +1,8 @@
 /* Layout: a tall black poster. The orb sits at 42% of the poster height, the wordmark at 77%. */
 .poster {
   --poster: #000000;
-  --label: #f4f6ff;
-  --bloom: 64, 84, 190;
+  --label: #f4f8ff;
+  --bloom: 74, 178, 255;
 
   position: relative;
   width: min(100%, calc((100svh - 32px) * 0.5477));
@@ -24,12 +24,9 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle at 50% 41.7%,
-    rgba(var(--bloom), 0.22) 0,
-    rgba(var(--bloom), 0.08) 26%,
-    rgba(var(--bloom), 0) 52%
-  );
+  background:
+    radial-gradient(circle at 50% 41.7%, rgba(var(--bloom), 0.12) 0, rgba(var(--bloom), 0.045) 25%, transparent 50%),
+    radial-gradient(circle at 62% 44%, rgba(143, 92, 255, 0.08) 0, transparent 38%);
   pointer-events: none;
 }
 
@@ -51,14 +48,33 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: 77.1%;
+  top: 78.5%;
   transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(7px, 1.2cqw, 14px);
   text-align: center;
-  font-size: 11px;
-  font-size: 3.15cqw;
-  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--label);
   pointer-events: none;
   user-select: none;
+}
+
+.wordmark {
+  padding-left: 0.34em;
+  font-size: clamp(28px, 5.5cqw, 72px);
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  line-height: 1;
+  text-shadow: 0 0 28px rgb(125 197 255 / 18%);
+}
+
+.subtitle {
+  padding-left: 0.32em;
+  font-size: clamp(8px, 1.4cqw, 15px);
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  line-height: 1.6;
+  color: rgb(235 242 255 / 82%);
 }
