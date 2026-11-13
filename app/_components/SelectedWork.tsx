@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useSceneVisibility } from "./useSceneVisibility";
 
 const ExhibitionWorld = dynamic(() => import("./ProjectExhibitionWorld"), {
   ssr: false,
@@ -74,6 +75,7 @@ export default function SelectedWork() {
   const progress = useRef(0);
   const sectionRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
+  const scene = useSceneVisibility<HTMLDivElement>();
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -109,8 +111,8 @@ export default function SelectedWork() {
   return (
     <section ref={sectionRef} id="work" aria-label="ONEXA immersive project exhibition" className="relative isolate h-[100svh] min-h-[100svh] overflow-hidden bg-[#030609] text-white">
       <div className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(3,6,9,.04),transparent_24%,transparent_70%,rgba(3,6,9,.14)),linear-gradient(90deg,rgba(3,6,9,.04),transparent_36%,transparent_70%,rgba(3,6,9,.035)]" />
-      <div className="absolute inset-0 z-0">
-        <ExhibitionWorld progress={progress} reducedMotion={Boolean(reducedMotion)} projects={exhibitionProjects} activeIndex={active} />
+      <div ref={scene.ref} className="absolute inset-0 z-0">
+        {scene.shouldRender && <ExhibitionWorld progress={progress} reducedMotion={Boolean(reducedMotion)} projects={exhibitionProjects} activeIndex={active} active={scene.visible} />}
       </div>
 
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between px-5 pb-6 pt-24 sm:px-8 sm:pb-8 lg:px-12 lg:pt-10">

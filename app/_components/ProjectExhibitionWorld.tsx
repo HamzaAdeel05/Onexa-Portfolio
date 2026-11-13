@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Line } from "@react-three/drei";
 import * as THREE from "three";
+import { getAdaptiveDpr } from "./useSceneVisibility";
 import type { DisplayKind, ExhibitionProject, SupportingDisplay } from "./SelectedWork";
 
 type WorldProps = {
@@ -11,6 +12,7 @@ type WorldProps = {
   reducedMotion: boolean;
   projects: ExhibitionProject[];
   activeIndex: number;
+  active: boolean;
 };
 
 const stationSpacing = 22;
@@ -88,15 +90,22 @@ function makeDisplayTexture(label: string, kind: DisplayKind, accent: string) {
 
 function ScreenArtwork({ display, accent, activation, width, height }: { display: SupportingDisplay; accent: string; activation: { current: number }; width: number; height: number }) {
   const material = useRef<THREE.MeshBasicMaterial>(null);
-  const texture = useMemo(() => makeDisplayTexture(display.label, display.kind, accent), [display.label, display.kind, accent]);
-  useEffect(() => () => texture?.dispose(), [texture]);
+  const texture = useRef<THREE.CanvasTexture | null>(null);
+  useEffect(() => () => { texture.current?.dispose(); texture.current = null; }, []);
   useFrame(() => {
-    if (material.current) material.current.opacity = 0.2 + activation.current * 0.8;
+    const focus = activation.current;
+    if (!texture.current && focus > 0.32) {
+      texture.current = makeDisplayTexture(display.label, display.kind, accent);
+      if (texture.current && material.current) {
+        material.current.map = texture.current;
+        material.current.needsUpdate = true;
+      }
+    }
+    if (material.current) material.current.opacity = 0.2 + focus * 0.8;
   });
-  if (!texture) return null;
   return <mesh position={[0, 0, 0.112]}>
     <planeGeometry args={[width - 0.32, height - 0.3]} />
-    <meshBasicMaterial ref={material} map={texture} transparent opacity={0.2} toneMapped={false} />
+    <meshBasicMaterial ref={material} color="#ffffff" transparent opacity={0.2} toneMapped={false} />
   </mesh>;
 }
 
@@ -186,7 +195,7 @@ function MainDisplay({ project, active }: { project: ExhibitionProject; active: 
   const glass = useRef<THREE.MeshPhysicalMaterial>(null);
   const edge = useRef<THREE.MeshStandardMaterial>(null);
   const [width, height] = [12.3, 6.3];
-  const texture = useMemo(() => makeMainDisplayTexture(project), [project]);
+  const texture = useMemo(() => active ? makeMainDisplayTexture(project) : null, [project, active]);
   useEffect(() => () => texture?.dispose(), [texture]);
 
   useFrame((state) => {
@@ -396,8 +405,8 @@ function CameraRig({ progress, reducedMotion }: { progress: { current: number };
   return null;
 }
 
-export default function ProjectExhibitionWorld({ progress, reducedMotion, projects, activeIndex }: WorldProps) {
-  return <Canvas camera={{ position: [-8, 4.15, 12.8], fov: 40, near: 0.1, far: 130 }} dpr={[1, 1.5]} gl={{ alpha: true, antialias: false, powerPreference: "high-performance" }}>
+export default function ProjectExhibitionWorld({ progress, reducedMotion, projects, activeIndex, active }: WorldProps) {
+  return <Canvas camera={{ position: [-8, 4.15, 12.8], fov: 40, near: 0.1, far: 130 }} dpr={getAdaptiveDpr()} frameloop={active ? "always" : "never"} gl={{ alpha: true, antialias: false, powerPreference: "high-performance" }}>
     <color attach="background" args={["#101925"]} />
     <ambientLight intensity={0.86} />
     <hemisphereLight args={["#e0f2ff", "#111a27", 0.86]} />

@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useSceneVisibility } from "./useSceneVisibility";
 
 const WorkflowWorld = dynamic(() => import("./WorkflowWorld"), {
   ssr: false,
@@ -46,6 +47,7 @@ const stages = [
 
 export default function ProcessSection() {
   const reducedMotion = useReducedMotion();
+  const scene = useSceneVisibility<HTMLDivElement>();
   const progress = useRef(0);
   const stageRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -92,8 +94,8 @@ export default function ProcessSection() {
       <div ref={stageRef} className="relative isolate grid h-[100svh] min-h-[590px] grid-cols-1 overflow-hidden bg-[#090d0b] lg:grid-cols-[.86fr_1.14fr]">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_76%_48%,rgba(21,59,41,.28),transparent_57%)]" />
 
-        <div className="pointer-events-none absolute inset-0 z-0 lg:left-auto lg:right-0 lg:w-[66%]">
-          <WorkflowWorld progress={progress} reducedMotion={Boolean(reducedMotion)} />
+        <div ref={scene.ref} className="pointer-events-none absolute inset-0 z-0 lg:left-auto lg:right-0 lg:w-[66%]">
+          {scene.shouldRender && <WorkflowWorld progress={progress} reducedMotion={Boolean(reducedMotion)} active={scene.visible} />}
           <div className="absolute inset-0 bg-gradient-to-t from-[#090d0b] via-[#090d0b]/30 to-transparent lg:bg-gradient-to-r lg:from-[#090d0b] lg:via-[#090d0b]/20 lg:to-transparent" />
           <div className="absolute right-5 top-24 text-[9px] uppercase tracking-[.22em] text-[#35d98a]/65 sm:right-8 lg:right-12 lg:top-10">ONEXA / DIGITAL CREATION ENGINE</div>
           <div className="absolute bottom-[48%] right-5 font-mono text-[9px] tracking-[.16em] text-white/25 sm:right-8 lg:bottom-10 lg:right-12">FIG. {current.number} — PROCESS IN MOTION</div>

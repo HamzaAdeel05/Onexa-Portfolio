@@ -5,6 +5,7 @@ import { Sparkles, Stars } from "@react-three/drei";
 import { useReducedMotion } from "framer-motion";
 import { Suspense, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { getAdaptiveDpr } from "./useSceneVisibility";
 
 function Planet() {
   const group = useRef<THREE.Group>(null);
@@ -71,11 +72,11 @@ function Scene() {
   </>;
 }
 
-export default function CosmicScene() {
+export default function CosmicScene({ active }: { active: boolean }) {
   const reducedMotion = useReducedMotion();
   return <Canvas
-    frameloop={reducedMotion ? "demand" : "always"}
-    dpr={[1, 1.4]}
+    frameloop={!active ? "never" : reducedMotion ? "demand" : "always"}
+    dpr={getAdaptiveDpr()}
     camera={{ position: [0, 0, 6.6], fov: 36 }}
     gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
     fallback={<div aria-label="A glowing emerald planet in deep space" className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_38%_38%,#75d79b_0%,#176642_32%,#07140e_70%)]" />}

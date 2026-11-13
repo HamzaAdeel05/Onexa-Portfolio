@@ -3,8 +3,10 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef, type MutableRefObject } from "react";
 import * as THREE from "three";
+import { getAdaptiveDpr } from "./useSceneVisibility";
 
-type Props = { progress: MutableRefObject<number>; reducedMotion: boolean };
+type SceneProps = { progress: MutableRefObject<number>; reducedMotion: boolean };
+type Props = SceneProps & { active: boolean };
 type Pose = readonly [number, number, number, number];
 
 const corePoses: Pose[] = [
@@ -32,7 +34,7 @@ function applyPose(group: THREE.Group | null, poses: Pose[], progress: number) {
   group.scale.setScalar(THREE.MathUtils.lerp(from[3], to[3], mix));
 }
 
-function ProjectSeed({ progress, reducedMotion }: Props) {
+function ProjectSeed({ progress, reducedMotion }: SceneProps) {
   const root = useRef<THREE.Group>(null);
   const crystal = useRef<THREE.Group>(null);
   const scanRing = useRef<THREE.Mesh>(null);
@@ -99,7 +101,7 @@ function ProjectSeed({ progress, reducedMotion }: Props) {
   </group>;
 }
 
-function FragmentCloud({ progress, reducedMotion }: Props) {
+function FragmentCloud({ progress, reducedMotion }: SceneProps) {
   const mesh = useRef<THREE.InstancedMesh>(null);
   const directions = useMemo(() => Array.from({ length: 36 }, (_, index) => {
     const phi = Math.acos(-1 + (2 * index) / 36);
@@ -198,7 +200,7 @@ function DataFilaments() {
   </lineSegments>;
 }
 
-function CreationSystem({ progress, reducedMotion }: Props) {
+function CreationSystem({ progress, reducedMotion }: SceneProps) {
   const center = useRef<THREE.Group>(null);
   const frame = useRef<THREE.Group>(null);
   const modules = useRef<THREE.Group>(null);
@@ -233,7 +235,7 @@ function CreationSystem({ progress, reducedMotion }: Props) {
   </>;
 }
 
-function CameraRig({ progress, reducedMotion }: Props) {
+function CameraRig({ progress, reducedMotion }: SceneProps) {
   const { camera, pointer } = useThree();
   useFrame((_, delta) => {
     const pullback = THREE.MathUtils.smoothstep(progress.current, 0.76, 1);
@@ -247,7 +249,7 @@ function CameraRig({ progress, reducedMotion }: Props) {
   return null;
 }
 
-function Scene({ progress, reducedMotion }: Props) {
+function Scene({ progress, reducedMotion }: SceneProps) {
   return <>
     <color attach="background" args={["#090d0b"]} />
     <fog attach="fog" args={["#090d0b", 12, 27]} />
@@ -259,10 +261,11 @@ function Scene({ progress, reducedMotion }: Props) {
   </>;
 }
 
-export default function WorkflowWorld({ progress, reducedMotion }: Props) {
+export default function WorkflowWorld({ progress, reducedMotion, active }: Props) {
   return <Canvas
     className="!absolute inset-0"
-    dpr={[1, 1.25]}
+    dpr={getAdaptiveDpr()}
+    frameloop={active ? "always" : "never"}
     camera={{ position: [0, 0, 9.1], fov: 40, near: 0.1, far: 50 }}
     gl={{ alpha: false, antialias: false, powerPreference: "low-power" }}
     fallback={<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_58%_48%,rgba(22,160,90,.2),transparent_64%)]" aria-label="ONEXA digital creation environment" />}

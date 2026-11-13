@@ -3,8 +3,10 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef, type MutableRefObject } from "react";
 import * as THREE from "three";
+import { getAdaptiveDpr } from "./useSceneVisibility";
 
-type Props = { progress: MutableRefObject<number>; reducedMotion: boolean };
+type SceneProps = { progress: MutableRefObject<number>; reducedMotion: boolean };
+type Props = SceneProps & { active: boolean };
 type GroupRef = React.RefObject<THREE.Group | null>;
 type Pose = readonly [number, number, number, number];
 
@@ -146,7 +148,7 @@ function UnifiedEcosystem({ reducedMotion }: { reducedMotion: boolean }) {
   </group>;
 }
 
-function CameraRig({ progress, reducedMotion }: Props) {
+function CameraRig({ progress, reducedMotion }: SceneProps) {
   const { camera, pointer } = useThree();
   useFrame((_, delta) => {
     const pullback = THREE.MathUtils.smoothstep(progress.current, 0.78, 1);
@@ -159,7 +161,7 @@ function CameraRig({ progress, reducedMotion }: Props) {
   return null;
 }
 
-function Scene({ progress, reducedMotion }: Props) {
+function Scene({ progress, reducedMotion }: SceneProps) {
   const neural = useRef<THREE.Group>(null);
   const machine = useRef<THREE.Group>(null);
   const browser = useRef<THREE.Group>(null);
@@ -189,12 +191,12 @@ function Scene({ progress, reducedMotion }: Props) {
   </>;
 }
 
-export default function ServicesWorld({ progress, reducedMotion }: Props) {
+export default function ServicesWorld({ progress, reducedMotion, active }: Props) {
   return <Canvas
     className="!absolute inset-0"
-    dpr={[1, 1.25]}
+    dpr={getAdaptiveDpr()}
     camera={{ position: [0, 0, 8.5], fov: 42, near: 0.1, far: 40 }}
-    frameloop="always"
+    frameloop={active ? "always" : "never"}
     gl={{ alpha: false, antialias: false, powerPreference: "low-power" }}
     fallback={<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(22,160,90,.2),transparent_64%)]" aria-label="Emerald digital environment" />}
   >

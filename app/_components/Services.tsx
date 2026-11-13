@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useSceneVisibility } from "./useSceneVisibility";
 
 const ServicesWorld = dynamic(() => import("./ServicesWorld"), {
   ssr: false,
@@ -41,6 +42,7 @@ export default function ServicesSection() {
   const progress = useRef(0);
   const stage = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
+  const scene = useSceneVisibility<HTMLDivElement>();
 
   useEffect(() => {
     let ctx: { revert: () => void } | undefined;
@@ -124,8 +126,8 @@ export default function ServicesSection() {
             </div>
           </div>
 
-          <div className="pointer-events-none absolute inset-0 order-1 lg:relative lg:order-2">
-            <ServicesWorld progress={progress} reducedMotion={Boolean(reducedMotion)} />
+          <div ref={scene.ref} className="pointer-events-none absolute inset-0 order-1 lg:relative lg:order-2">
+            {scene.shouldRender && <ServicesWorld progress={progress} reducedMotion={Boolean(reducedMotion)} active={scene.visible} />}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_50%,rgba(22,160,90,.12),transparent_66%)]" />
             <div className="absolute right-5 top-5 text-[9px] uppercase tracking-[.2em] text-[#35d98a]/65 sm:right-8 sm:top-8">Continuous environment</div>
             <div className="absolute bottom-5 right-5 font-mono text-[9px] tracking-[.18em] text-white/25 sm:bottom-8 sm:right-8">FIG. {services[active].n} — ONEXA</div>
