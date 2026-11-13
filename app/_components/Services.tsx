@@ -59,6 +59,9 @@ export default function ServicesSection() {
           end: () => `+=${window.innerHeight * 4}`,
           pin: stage.current,
           pinSpacing: true,
+          // Refresh pinned sections in document order so their spacer heights
+          // are included when downstream sections measure their start points.
+          refreshPriority: 2,
           scrub: reducedMotion ? false : 0.8,
           invalidateOnRefresh: true,
           onUpdate: (trigger) => {
@@ -73,6 +76,7 @@ export default function ServicesSection() {
           },
         });
       }, stage);
+      ScrollTrigger.refresh();
     })();
     return () => { cancelled = true; ctx?.revert(); };
   }, [reducedMotion]);

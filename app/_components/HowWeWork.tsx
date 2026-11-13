@@ -62,7 +62,7 @@ export default function ProcessSection() {
         pin: stageRef.current,
         pinSpacing: true,
         scrub: reducedMotion ? false : 0.7,
-        refreshPriority: -1,
+        refreshPriority: 1,
         invalidateOnRefresh: true,
         onUpdate: (trigger) => {
           progress.current = trigger.progress;

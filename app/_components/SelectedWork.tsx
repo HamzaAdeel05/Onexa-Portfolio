@@ -1,47 +1,133 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import dynamic from "next/dynamic";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+const ExhibitionWorld = dynamic(() => import("./ProjectExhibitionWorld"), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_52%_45%,rgba(65,130,157,.22),transparent_58%)]" />,
+});
+
+export type DisplayKind = "analytics" | "table" | "conversation" | "chart" | "documents" | "network" | "interface";
+export type SupportingDisplay = { label: string; kind: DisplayKind };
+export type ExhibitionProject = {
+  number: string;
+  title: string;
+  category: string;
+  description: string;
+  technologies: string[];
+  features: string[];
+  preview: string;
+  demoUrl: string;
+  githubUrl: string;
+  visualization: "business-network" | "medical-intelligence" | "financial-globe" | "knowledge-graph";
+  accent: string;
+  secondary: string;
+  revealRange: number;
+  supportingDisplays: SupportingDisplay[];
+};
+
+export const exhibitionProjects: ExhibitionProject[] = [
+  {
+    number: "01", title: "CUIBEX CRM", category: "AI Automation / SaaS / Business Intelligence",
+    description: "An AI-powered business outreach and lead generation platform designed to automate prospect discovery, qualification, personalized email generation, and campaign management.",
+    technologies: ["React / Next.js", "Python", "FastAPI", "SQLite", "AI integrations", "SMTP / Email automation", "Web scraping / Lead sourcing"],
+    features: ["Automated lead discovery", "Business qualification", "Website outreach", "AI-personalized email generation", "Email campaign management", "Lead management", "Email tracking and analytics", "Multiple outreach workflows", "Business information extraction"],
+    preview: "CUIBEX CRM DASHBOARD / SCREENSHOT PLACEHOLDER", demoUrl: "#contact", githubUrl: "#contact",
+    visualization: "business-network", accent: "#73e8c2", secondary: "#68a8ff", revealRange: 1.1,
+    supportingDisplays: ["Lead discovery", "Qualified businesses", "Email preview", "Campaign manager", "Outreach analytics", "Email activity", "Business profiles", "Workflow status"].map((label, i) => ({ label, kind: (["analytics", "table", "conversation", "interface", "chart", "analytics", "table", "network"] as DisplayKind[])[i] })),
+  },
+  {
+    number: "02", title: "MediGuide AI", category: "Healthcare AI",
+    description: "An AI-powered healthcare information assistant designed to provide an interactive interface for accessing medical information.",
+    technologies: ["AI assistant", "Healthcare information", "Interactive application"],
+    features: ["Interactive medical information assistant", "Conversational healthcare interface", "Accessible information experience", "Health data visualization"],
+    preview: "MEDIGUIDE AI / SCREENSHOT PLACEHOLDER", demoUrl: "#contact", githubUrl: "#contact",
+    visualization: "medical-intelligence", accent: "#71e5e9", secondary: "#b8a1ff", revealRange: 1.05,
+    supportingDisplays: ["Assistant conversation", "Health information", "Care topics", "Knowledge pathways", "Application preview", "Information index", "Response context", "Topic analytics"].map((label, i) => ({ label, kind: (["conversation", "documents", "table", "network", "interface", "documents", "conversation", "chart"] as DisplayKind[])[i] })),
+  },
+  {
+    number: "03", title: "FinWise AI", category: "Financial Technology / AI",
+    description: "An AI-powered financial analysis application with an API-driven backend and modern frontend.",
+    technologies: ["FastAPI", "AI analysis", "Modern frontend"],
+    features: ["Financial analysis", "Interactive data insights", "API-driven backend", "Modern analysis interface"],
+    preview: "FINWISE AI / SCREENSHOT PLACEHOLDER", demoUrl: "#contact", githubUrl: "#contact",
+    visualization: "financial-globe", accent: "#83dfff", secondary: "#c69bff", revealRange: 1.05,
+    supportingDisplays: ["Financial overview", "Market signals", "Analysis trends", "Performance metrics", "Data insights", "Portfolio view", "Trend analysis", "API status"].map((label, i) => ({ label, kind: (["analytics", "chart", "chart", "analytics", "table", "interface", "chart", "network"] as DisplayKind[])[i] })),
+  },
+  {
+    number: "04", title: "ReadMe AI", category: "Artificial Intelligence / RAG",
+    description: "An intelligent document question-answering application using retrieval-augmented generation and FAISS.",
+    technologies: ["RAG", "FAISS", "AI", "Document retrieval"],
+    features: ["Document question answering", "Retrieval-augmented generation", "FAISS vector search", "Connected information retrieval"],
+    preview: "README AI / SCREENSHOT PLACEHOLDER", demoUrl: "#contact", githubUrl: "#contact",
+    visualization: "knowledge-graph", accent: "#a8c8ff", secondary: "#81e2c9", revealRange: 1.05,
+    supportingDisplays: ["Document index", "Knowledge retrieval", "Question and answer", "Source documents", "Vector search", "Connected topics", "Search activity", "Context chunks"].map((label, i) => ({ label, kind: (["documents", "network", "conversation", "documents", "analytics", "network", "chart", "table"] as DisplayKind[])[i] })),
+  },
+];
 
 export default function SelectedWork() {
   const reducedMotion = useReducedMotion();
-  return <section id="work" className="relative overflow-hidden bg-[#090d0b] px-5 py-28 text-white sm:px-8 lg:px-16">
-    <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-40 h-96 w-96 rounded-full bg-[#16a05a]/10 blur-[120px]" />
-    <div className="relative mx-auto max-w-7xl">
-      <motion.div initial={reducedMotion ? false : { opacity: 0, y: 26 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-14 flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-        <div>
-          <div className="mb-6 flex items-center gap-3"><span className="h-px w-10 bg-[#35d98a]" /><span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#35d98a]">Selected Work / 05</span></div>
-          <h2 className="text-4xl font-medium leading-tight tracking-tight sm:text-6xl lg:text-7xl">BUILT TO<br /><span className="text-[#35d98a]">MAKE AN IMPACT.</span></h2>
-        </div>
-        <p className="max-w-sm text-sm leading-7 text-white/50 sm:text-base">A closer look at ONEXA&apos;s work in intelligent software and digital experiences.</p>
-      </motion.div>
+  const progress = useRef(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [active, setActive] = useState(0);
 
-      <motion.article initial={reducedMotion ? false : { opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.7 }} className="grid overflow-hidden border-y border-white/10 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="group relative flex min-h-[340px] items-center justify-center overflow-hidden bg-[#0c1510] p-8 sm:min-h-[480px] sm:p-14">
-          <div aria-hidden="true" className="absolute inset-0 opacity-35 [background-image:radial-gradient(#35d98a33_1px,transparent_1px)] [background-size:24px_24px]" />
-          <div aria-hidden="true" className="absolute h-[75%] aspect-square rounded-full border border-[#35d98a]/10 transition-transform duration-1000 group-hover:scale-110" />
-          <div aria-hidden="true" className="absolute h-[60%] aspect-square rounded-full border border-dashed border-[#35d98a]/20 transition-transform duration-[1400ms] group-hover:-rotate-12" />
-          <div aria-hidden="true" className="absolute h-[45%] aspect-square rounded-full bg-[radial-gradient(circle_at_35%_32%,rgba(53,217,138,0.34),rgba(21,59,41,0.18)_48%,transparent_74%)] blur-sm" />
-          <div className="relative z-10 text-center">
-            <span className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa79e]">ONEXA / CRM</span>
-            <span className="mt-3 block text-5xl font-medium tracking-[-0.08em] text-white sm:text-7xl">CUI<span className="text-[#35d98a]">BEX</span></span>
-            <span className="mt-3 block text-[9px] uppercase tracking-[0.28em] text-white/40">Project showcase</span>
-          </div>
-          <span className="absolute bottom-5 left-5 text-[9px] uppercase tracking-[0.2em] text-white/35">01 / CUIBEX CRM</span>
-          <span aria-hidden="true" className="absolute right-6 top-5 text-[#35d98a]/60">↗</span>
-        </div>
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    gsap.registerPlugin(ScrollTrigger);
+    const context = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top top",
+        end: () => `+=${window.innerHeight * (exhibitionProjects.length - 1)}`,
+        pin: true,
+        pinSpacing: true,
+        refreshPriority: 0,
+        scrub: reducedMotion ? false : 0.65,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          progress.current = self.progress * (exhibitionProjects.length - 1);
+          const index = Math.min(exhibitionProjects.length - 1, Math.round(progress.current));
+          setActive((current) => current === index ? current : index);
+        },
+        onRefresh: (self) => {
+          progress.current = self.progress * (exhibitionProjects.length - 1);
+          const index = Math.min(exhibitionProjects.length - 1, Math.round(progress.current));
+          setActive((current) => current === index ? current : index);
+        },
+      });
+    }, sectionRef);
+    const refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 350);
+    return () => { window.clearTimeout(refreshTimer); context.revert(); };
+  }, [reducedMotion]);
 
-        <div className="flex flex-col justify-center border-t border-white/10 p-8 sm:p-12 lg:border-l lg:border-t-0 lg:p-14">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#35d98a]">CRM · Software</span>
-          <h3 className="mt-5 text-3xl font-medium tracking-tight sm:text-5xl">CUIBEX CRM</h3>
-          <p className="mt-5 max-w-lg text-sm leading-7 text-[#9aa79e]">A CRM project in ONEXA&apos;s portfolio. Get in touch to discuss the work and what you&apos;re looking to build.</p>
-          <div className="mt-8 flex flex-wrap gap-2"><span className="border border-white/15 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-white/55">Customer relationship management</span></div>
-          <a href="#contact" className="group mt-10 inline-flex w-fit items-center gap-4 border-b border-[#35d98a]/50 pb-3 text-sm text-[#dff9e9] transition-colors hover:border-[#35d98a] hover:text-[#35d98a]">Discuss a similar project <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">↗</span></a>
-        </div>
-      </motion.article>
+  const project = exhibitionProjects[active];
 
-      <div className="mt-14 flex flex-col justify-end gap-5 sm:flex-row sm:items-center">
-        <a href="#contact" className="group inline-flex items-center gap-4 rounded-full border border-white/20 px-6 py-4 text-sm transition-all hover:border-[#35d98a]/60 hover:bg-[#153b29]/40">Let&apos;s build something meaningful <span className="transition-transform group-hover:translate-x-1">↗</span></a>
+  return (
+    <section ref={sectionRef} id="work" aria-label="ONEXA immersive project exhibition" className="relative isolate h-[100svh] min-h-[100svh] overflow-hidden bg-[#030609] text-white">
+      <div className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(3,6,9,.04),transparent_24%,transparent_70%,rgba(3,6,9,.14)),linear-gradient(90deg,rgba(3,6,9,.04),transparent_36%,transparent_70%,rgba(3,6,9,.035)]" />
+      <div className="absolute inset-0 z-0">
+        <ExhibitionWorld progress={progress} reducedMotion={Boolean(reducedMotion)} projects={exhibitionProjects} activeIndex={active} />
       </div>
-    </div>
-  </section>;
+
+      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between px-5 pb-6 pt-24 sm:px-8 sm:pb-8 lg:px-12 lg:pt-10">
+        <div className="flex items-start justify-between gap-6">
+          <div className="flex items-center gap-3 text-[9px] font-medium uppercase tracking-[.28em] text-[#b4e8d7]/75 sm:text-[10px]"><span className="h-px w-8 bg-[#78e7c0]"/>ONEXA / IMMERSIVE PROJECT ARCHIVE</div>
+          <div className="text-right font-mono text-[9px] tracking-[.2em] text-white/55 sm:text-[10px]">{project.number} <span className="text-white/25">/ {String(exhibitionProjects.length).padStart(2, "0")}</span><div className="mt-2 flex justify-end gap-1">{exhibitionProjects.map((item, i) => <span key={item.number} className={`h-px w-5 transition-colors ${i === active ? "bg-[#76e8c0]" : "bg-white/25"}`} />)}</div></div>
+        </div>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={project.number} initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} transition={{ duration: reducedMotion ? 0 : .22 }} className="max-w-[270px] text-[8px] uppercase tracking-[.18em] text-white/45 sm:max-w-none sm:text-[9px]">
+            <span>Vertical scroll moves the exhibition camera </span><span className="text-[#76e8c0]/70">↗</span>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {project.number}. {project.title}. {project.category}. {project.description} Technologies: {project.technologies.join(", ")}. Features: {project.features.join(", ")}.
+      </div>
+    </section>
+  );
 }

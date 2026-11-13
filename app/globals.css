@@ -14,7 +14,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+html { overflow-x: clip; scroll-behavior: smooth; scroll-padding-top: 5rem; }
 body {
   min-height: 100%;
   margin: 0;
