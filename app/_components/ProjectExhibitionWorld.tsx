@@ -11,7 +11,6 @@ type WorldProps = {
   progress: { current: number };
   reducedMotion: boolean;
   projects: ExhibitionProject[];
-  activeIndex: number;
   active: boolean;
 };
 
@@ -29,28 +28,28 @@ function makeDisplayTexture(label: string, kind: DisplayKind, accent: string) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
 
-  ctx.fillStyle = "#08121d";
+  ctx.fillStyle = "#101e2c";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   const wash = ctx.createLinearGradient(0, 0, 320, 200);
-  wash.addColorStop(0, `${accent}20`);
-  wash.addColorStop(1, "#09121a00");
+  wash.addColorStop(0, `${accent}50`);
+  wash.addColorStop(1, "#09121a18");
   ctx.fillStyle = wash;
   ctx.fillRect(0, 0, 320, 200);
-  ctx.fillStyle = "#dceef4";
-  ctx.font = "600 14px Arial, sans-serif";
-  ctx.fillText(label.toUpperCase(), 15, 23, 230);
+  ctx.fillStyle = "#f0f8ff";
+  ctx.font = "600 15px Arial, sans-serif";
+  ctx.fillText(label.toUpperCase(), 15, 25, 260);
   ctx.fillStyle = accent;
   ctx.fillRect(15, 34, 42, 2);
-  ctx.strokeStyle = "#b8d5e322";
+  ctx.strokeStyle = "#b8d5e244";
   ctx.lineWidth = 1;
-  for (let y = 57; y < 185; y += 28) {
+  for (let y = 60; y < 185; y += 28) {
     ctx.beginPath(); ctx.moveTo(15, y); ctx.lineTo(305, y); ctx.stroke();
   }
 
   if (kind === "chart" || kind === "analytics" || kind === "network") {
     ctx.strokeStyle = accent;
-    ctx.globalAlpha = 0.86;
-    ctx.lineWidth = 2;
+    ctx.globalAlpha = 0.98;
+    ctx.lineWidth = 2.6;
     ctx.beginPath();
     for (let i = 0; i < 12; i++) {
       const x = 22 + i * 24;
@@ -60,7 +59,7 @@ function makeDisplayTexture(label: string, kind: DisplayKind, accent: string) {
     }
     ctx.stroke();
     ctx.globalAlpha = 1;
-    ctx.fillStyle = `${accent}44`;
+    ctx.fillStyle = `${accent}70`;
     for (let i = 0; i < 6; i++) {
       const height = 18 + ((i * 19 + label.length * 7) % 53);
       ctx.fillRect(26 + i * 43, 178 - height, 15, height);
@@ -78,7 +77,7 @@ function makeDisplayTexture(label: string, kind: DisplayKind, accent: string) {
       ctx.fillRect(x + 9, y + 21, 100, 2);
       ctx.fillRect(x + 9, y + 29, 62, 2);
       ctx.globalAlpha = 1;
-      ctx.fillStyle = `${accent}24`;
+      ctx.fillStyle = `${accent}36`;
     }
   }
 
@@ -101,7 +100,7 @@ function ScreenArtwork({ display, accent, activation, width, height }: { display
         material.current.needsUpdate = true;
       }
     }
-    if (material.current) material.current.opacity = 0.2 + focus * 0.8;
+    if (material.current) material.current.opacity = 0.35 + focus * 0.65;
   });
   return <mesh position={[0, 0, 0.112]}>
     <planeGeometry args={[width - 0.32, height - 0.3]} />
@@ -135,7 +134,7 @@ function SupportingScreen({ display, index, projectIndex, progress, project, red
 
   return <group ref={root} position={[x, y, z]} rotation={[0, rotation, 0]}>
     <mesh castShadow><boxGeometry args={[width, height, 0.18]} /><meshPhysicalMaterial color="#0a121b" metalness={0.82} roughness={0.22} clearcoat={0.9} /></mesh>
-    <mesh position={[0, 0, 0.097]}><planeGeometry args={[width - 0.12, height - 0.12]} /><meshBasicMaterial color="#07101a" /></mesh>
+    <mesh position={[0, 0, 0.097]}><planeGeometry args={[width - 0.12, height - 0.12]} /><meshBasicMaterial color="#0b1824" /></mesh>
     <ScreenArtwork display={display} accent={project.accent} activation={activation} width={width} height={height} />
     {[
       [0, height / 2, width, 0.035], [0, -height / 2, width, 0.035],
@@ -181,8 +180,7 @@ function makeMainDisplayTexture(project: ExhibitionProject) {
   ctx.fillStyle = panel; ctx.fillRect(590, 90, 470, 380); ctx.strokeStyle = `${accent}99`; ctx.strokeRect(590, 90, 470, 380);
   ctx.fillStyle = "#d8e7ed"; ctx.font = "600 14px Arial, sans-serif"; ctx.fillText(project.preview.toUpperCase().slice(0, 42), 610, 120);
   ctx.fillStyle = accent; ctx.textAlign = "right"; ctx.fillText("●  ●  ●", 1040, 120); ctx.textAlign = "left";
-  const labels = ["SYSTEM OVERVIEW", "ACTIVE SIGNALS", "PROJECT DATA"]; const values = ["92.4%", "08.6k", "ACTIVE"];
-  for (let i = 0; i < 3; i++) { const x = 610 + i * 142; ctx.fillStyle = "#10212b"; ctx.fillRect(x, 140, 130, 64); ctx.strokeStyle = "#b9d2de33"; ctx.strokeRect(x, 140, 130, 64); ctx.fillStyle = "#8faab5"; ctx.font = "10px Arial, sans-serif"; ctx.fillText(labels[i], x + 9, 158); ctx.fillStyle = i === 1 ? project.secondary : "#e7f5f8"; ctx.font = "20px Arial, sans-serif"; ctx.fillText(values[i], x + 9, 190); }
+  for (let i = 0; i < 3; i++) { const x = 610 + i * 142; ctx.fillStyle = "#10212b"; ctx.fillRect(x, 140, 130, 64); ctx.strokeStyle = "#b9d2de33"; ctx.strokeRect(x, 140, 130, 64); ctx.fillStyle = "#8faab5"; ctx.font = "10px Arial, sans-serif"; ctx.fillText(project.dashboardLabels[i], x + 9, 158, 112); ctx.fillStyle = i === 1 ? project.secondary : "#e7f5f8"; ctx.font = "13px Arial, sans-serif"; ctx.fillText(project.dashboardValues[i], x + 9, 190, 112); }
   ctx.fillStyle = "#102230"; ctx.fillRect(610, 220, 430, 220); ctx.strokeStyle = "#c2e0ea44";
   for (let gy = 254; gy < 430; gy += 42) { ctx.beginPath(); ctx.moveTo(610, gy); ctx.lineTo(1040, gy); ctx.stroke(); }
   [48,79,62,112,91,132,105,152,124,171,139,184].forEach((height, i) => { const gradient = ctx.createLinearGradient(0, 430-height, 0, 430); gradient.addColorStop(0, i % 4 === 0 ? project.secondary : accent); gradient.addColorStop(1, `${accent}22`); ctx.fillStyle = gradient; ctx.fillRect(630 + i * 33, 430 - height, 22, height); });
@@ -190,21 +188,34 @@ function makeMainDisplayTexture(project: ExhibitionProject) {
   project.features.slice(0, 5).forEach((feature, i) => { const fy = 422 + i * 25; ctx.fillStyle = accent; ctx.fillText("+", 42, fy); ctx.fillStyle = "#d2e1e7"; ctx.fillText(feature, 62, fy, 485); });
   const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace; texture.anisotropy = 2; return texture;
 }
-function MainDisplay({ project, active }: { project: ExhibitionProject; active: boolean }) {
+function MainDisplay({ project, index, progress }: { project: ExhibitionProject; index: number; progress: { current: number } }) {
   const root = useRef<THREE.Group>(null);
   const glass = useRef<THREE.MeshPhysicalMaterial>(null);
   const edge = useRef<THREE.MeshStandardMaterial>(null);
+  const artwork = useRef<THREE.MeshBasicMaterial>(null);
+  const texture = useRef<THREE.CanvasTexture | null>(null);
+  const activation = useRef(0);
   const [width, height] = [12.3, 6.3];
-  const texture = useMemo(() => active ? makeMainDisplayTexture(project) : null, [project, active]);
-  useEffect(() => () => texture?.dispose(), [texture]);
+  useEffect(() => () => { texture.current?.dispose(); texture.current = null; }, []);
 
   useFrame((state) => {
-    if (glass.current) glass.current.opacity = active ? 0.66 : 0.34;
-    if (edge.current) edge.current.emissiveIntensity = active ? 0.95 + Math.sin(state.clock.elapsedTime * 1.1) * 0.08 : 0.22;
+    const focus = focusAt(progress.current, index, project.revealRange);
+    activation.current = focus;
+    if (!texture.current && focus > 0.08) {
+      texture.current = makeMainDisplayTexture(project);
+      if (texture.current && artwork.current) {
+        artwork.current.map = texture.current;
+        artwork.current.needsUpdate = true;
+      }
+    }
+    if (glass.current) glass.current.opacity = 0.28 + focus * 0.24;
+    if (edge.current) edge.current.emissiveIntensity = 0.12 + focus * (0.92 + Math.sin(state.clock.elapsedTime * 1.1) * 0.08);
+    if (artwork.current) artwork.current.opacity = texture.current ? 0.25 + focus * 0.75 : 0;
+    if (root.current) root.current.scale.setScalar(0.98 + focus * 0.02);
   });
 
   return <group ref={root} position={[0, 5.65, -6.15]}>
-    <mesh castShadow><boxGeometry args={[width, height, 0.22]} /><meshPhysicalMaterial ref={glass} color="#11202b" emissive="#122d3d" emissiveIntensity={0.34} transparent opacity={0.66} metalness={0.55} roughness={0.2} clearcoat={0.9} side={THREE.DoubleSide} /></mesh>
+    <mesh castShadow><boxGeometry args={[width, height, 0.22]} /><meshPhysicalMaterial ref={glass} color="#152b3a" emissive="#16445a" emissiveIntensity={0.55} transparent opacity={0.52} metalness={0.42} roughness={0.18} clearcoat={1} side={THREE.DoubleSide} /></mesh>
     {[
       [0, height / 2, width, 0.04], [0, -height / 2, width, 0.04],
       [-width / 2, 0, 0.04, height], [width / 2, 0, 0.04, height],
@@ -213,10 +224,10 @@ function MainDisplay({ project, active }: { project: ExhibitionProject; active: 
     </mesh>)}
     <mesh position={[-width / 2 + 0.22, height / 2 - 0.2, 0.15]}><boxGeometry args={[0.12, 0.12, 0.025]} /><meshBasicMaterial color={project.accent} toneMapped={false} /></mesh>
     <mesh position={[width / 2 - 0.22, height / 2 - 0.2, 0.15]}><boxGeometry args={[0.12, 0.12, 0.025]} /><meshBasicMaterial color={project.secondary} toneMapped={false} /></mesh>
-    {texture && <mesh position={[0, 0, 0.145]}>
+    <mesh position={[0, 0, 0.145]}>
       <planeGeometry args={[width - 0.16, height - 0.16]} />
-      <meshBasicMaterial map={texture} toneMapped={false} />
-    </mesh>}
+      <meshBasicMaterial ref={artwork} transparent opacity={0} depthWrite={false} toneMapped={false} />
+    </mesh>
   </group>;
 }
 
@@ -284,7 +295,7 @@ function ProjectionPlatform({ project, index, progress, reducedMotion }: { proje
   useFrame((state) => {
     const focus = focusAt(progress.current, index, project.revealRange);
     if (rings.current) rings.current.scale.setScalar(0.65 + focus * 0.35);
-    if (beam.current) beam.current.opacity = focus * 0.075;
+    if (beam.current) beam.current.opacity = focus * 0.12;
     if (rings.current && focus > 0.01) rings.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.18) * 0.025;
   });
   return <group>
@@ -300,26 +311,27 @@ function ProjectionPlatform({ project, index, progress, reducedMotion }: { proje
   </group>;
 }
 
-function ProjectZone({ project, index, progress, activeIndex, reducedMotion }: {
-  project: ExhibitionProject; index: number; progress: { current: number }; activeIndex: number; reducedMotion: boolean;
+function ProjectZone({ project, index, progress, reducedMotion }: {
+  project: ExhibitionProject; index: number; progress: { current: number }; reducedMotion: boolean;
 }) {
   const x = index * stationSpacing;
   const glow = useRef<THREE.PointLight>(null);
-  const current = useRef(0);
   useFrame((state) => {
     const focus = focusAt(progress.current, index, project.revealRange);
-    current.current = focus;
-    if (glow.current) glow.current.intensity = 2 + focus * 18;
+    if (glow.current) glow.current.intensity = 4 + focus * 22;
     if (glow.current && !reducedMotion) glow.current.intensity += Math.sin(state.clock.elapsedTime * 0.8 + index) * focus * 0.45;
   });
 
   return <group position={[x, 0, 0]}>
     <pointLight ref={glow} position={[0, 4.7, -3.7]} color={project.accent} intensity={5} distance={19} decay={1.8} />
-    <MainDisplay project={project} active={activeIndex === index} />
+    <MainDisplay project={project} index={index} progress={progress} />
     {project.supportingDisplays.map((display, i) => <SupportingScreen key={`${project.number}-${display.label}`} display={display} index={i} projectIndex={index} progress={progress} project={project} reducedMotion={reducedMotion} />)}
     <ProjectionPlatform project={project} index={index} progress={progress} reducedMotion={reducedMotion} />
     <mesh position={[0, 0.03, 0.15]} rotation={[-Math.PI / 2, 0, 0]}>
       <circleGeometry args={[3.1, 64]} /><meshBasicMaterial color={project.accent} transparent opacity={0.045} side={THREE.DoubleSide} toneMapped={false} />
+    </mesh>
+    <mesh position={[0, -0.994, -3.4]} rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[15, 5]} /><meshBasicMaterial color={project.secondary} transparent opacity={0.055} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} toneMapped={false} />
     </mesh>
     <mesh position={[0, 8.9, -2.2]} rotation={[Math.PI / 2, 0, 0]}>
       <planeGeometry args={[5.6, 0.035]} /><meshBasicMaterial color={project.accent} transparent opacity={0.28} toneMapped={false} />
@@ -345,46 +357,47 @@ function Corridor({ reducedMotion }: { reducedMotion: boolean }) {
 
   return <group>
     <mesh position={[32, -1.22, 0]} receiveShadow>
-      <boxGeometry args={[112, 0.38, 24]} /><meshPhysicalMaterial color="#111923" metalness={0.84} roughness={0.19} clearcoat={0.86} clearcoatRoughness={0.18} />
+      <boxGeometry args={[112, 0.38, 24]} /><meshPhysicalMaterial color="#202b38" metalness={0.42} roughness={0.28} clearcoat={1} clearcoatRoughness={0.16} />
     </mesh>
     <mesh position={[32, -1.015, 0]}>
-      <planeGeometry args={[110, 22]} /><meshBasicMaterial color="#17212a" transparent opacity={0.25} side={THREE.DoubleSide} />
+      <planeGeometry args={[110, 22]} /><meshBasicMaterial color="#344050" transparent opacity={0.14} side={THREE.DoubleSide} />
     </mesh>
 
-    {[-10.7, -8.7, 8.7, 10.7].map((z, i) => <group key={z}>
-      <mesh position={[32, 3.8, z]}><boxGeometry args={[110, 9.8, 0.14]} /><meshPhysicalMaterial color={i % 2 ? "#0b1219" : "#101922"} transparent opacity={0.46} metalness={0.74} roughness={0.28} /></mesh>
-      <mesh position={[32, 1.1, z + (z < 0 ? 0.09 : -0.09)]}><boxGeometry args={[110, 0.08, 0.08]} /><meshBasicMaterial color={i % 2 ? "#6baed0" : "#56d5ba"} transparent opacity={0.26} toneMapped={false} /></mesh>
+    {[-10.55, 10.55].map((z, i) => <group key={z}>
+      <mesh position={[32, 4.35, z]}><boxGeometry args={[110, 8.8, 0.12]} /><meshPhysicalMaterial color={i ? "#152432" : "#182432"} transparent opacity={0.16} metalness={0.36} roughness={0.24} clearcoat={0.8} /></mesh>
+      <mesh position={[32, 1.1, z + (z < 0 ? 0.09 : -0.09)]}><boxGeometry args={[110, 0.045, 0.08]} /><meshBasicMaterial color={i ? "#a18cff" : "#68dfff"} transparent opacity={0.62} toneMapped={false} /></mesh>
+      {Array.from({ length: 21 }, (_, panel) => <mesh key={panel} position={[-20 + panel * 5.2, 4.35, z + (z < 0 ? -0.1 : 0.1)]}><boxGeometry args={[0.055, 8.8, 0.06]} /><meshBasicMaterial color="#9ec8de" transparent opacity={0.3} /></mesh>)}
     </group>)}
 
-    {[-8.6, 8.6].map((z) => <mesh key={z} position={[32, 9.05, z]}><boxGeometry args={[110, 0.35, 0.32]} /><meshStandardMaterial color="#1b2731" metalness={0.9} roughness={0.22} /></mesh>)}
+    {[-8.6, 8.6].map((z) => <mesh key={z} position={[32, 9.05, z]}><boxGeometry args={[110, 0.35, 0.32]} /><meshStandardMaterial color="#263747" metalness={0.74} roughness={0.24} emissive="#274258" emissiveIntensity={0.18} /></mesh>)}
     {Array.from({ length: 17 }, (_, i) => {
       const x = -12 + i * 5.6;
       return <group key={i} position={[x, 4.2, 0]}>
-        <mesh rotation={[0, Math.PI / 2, 0]}><torusGeometry args={[7.5, 0.095, 8, 80]} /><meshStandardMaterial color="#25343e" metalness={0.92} roughness={0.28} /></mesh>
-        <mesh position={[0, 0, -10.15]}><boxGeometry args={[0.22, 8.4, 0.22]} /><meshStandardMaterial color="#16232c" metalness={0.9} roughness={0.3} /></mesh>
-        <mesh position={[0, 0, 10.15]}><boxGeometry args={[0.22, 8.4, 0.22]} /><meshStandardMaterial color="#16232c" metalness={0.9} roughness={0.3} /></mesh>
+        <mesh rotation={[0, Math.PI / 2, 0]}><torusGeometry args={[7.5, 0.095, 8, 80]} /><meshStandardMaterial color="#394b62" metalness={0.78} roughness={0.24} emissive="#293e5c" emissiveIntensity={0.14} /></mesh>
+        <mesh position={[0, 0, -10.15]}><boxGeometry args={[0.22, 8.4, 0.22]} /><meshStandardMaterial color="#283948" metalness={0.72} roughness={0.3} /></mesh>
+        <mesh position={[0, 0, 10.15]}><boxGeometry args={[0.22, 8.4, 0.22]} /><meshStandardMaterial color="#283948" metalness={0.72} roughness={0.3} /></mesh>
       </group>;
     })}
 
     {Array.from({ length: 26 }, (_, i) => {
       const x = -17 + i * 4.25;
       return <group key={i} position={[x, 0, 0]}>
-        <mesh position={[0, 9.34, -8.4]}><boxGeometry args={[0.18, 0.62, 0.18]} /><meshStandardMaterial color="#30424d" metalness={0.86} roughness={0.24} /></mesh>
-        <mesh position={[0, 9.34, 8.4]}><boxGeometry args={[0.18, 0.62, 0.18]} /><meshStandardMaterial color="#30424d" metalness={0.86} roughness={0.24} /></mesh>
-        <mesh position={[0, 9.0, 0]}><boxGeometry args={[0.12, 0.12, 16.8]} /><meshBasicMaterial color="#9db4c1" transparent opacity={0.2} /></mesh>
+        <mesh position={[0, 9.34, -8.4]}><boxGeometry args={[0.18, 0.62, 0.18]} /><meshStandardMaterial color="#3b5060" metalness={0.72} roughness={0.22} /></mesh>
+        <mesh position={[0, 9.34, 8.4]}><boxGeometry args={[0.18, 0.62, 0.18]} /><meshStandardMaterial color="#3b5060" metalness={0.72} roughness={0.22} /></mesh>
+        <mesh position={[0, 9.0, 0]}><boxGeometry args={[0.12, 0.12, 16.8]} /><meshBasicMaterial color="#c3d8e8" transparent opacity={0.34} /></mesh>
       </group>;
     })}
 
     {[-1, 1].map((side) => <group key={side}>
-      <mesh position={[32, -0.98, side * 5.6]}><boxGeometry args={[110, 0.025, 0.045]} /><meshBasicMaterial color={side < 0 ? "#6fcce0" : "#69e6bf"} transparent opacity={0.34} toneMapped={false} /></mesh>
-      <mesh position={[32, -0.98, side * 9.4]}><boxGeometry args={[110, 0.025, 0.045]} /><meshBasicMaterial color="#9ab0c0" transparent opacity={0.24} toneMapped={false} /></mesh>
+      <mesh position={[32, -0.98, side * 5.6]}><boxGeometry args={[110, 0.025, 0.045]} /><meshBasicMaterial color={side < 0 ? "#72ddff" : "#9588ff"} transparent opacity={0.68} toneMapped={false} /></mesh>
+      <mesh position={[32, -0.98, side * 9.4]}><boxGeometry args={[110, 0.025, 0.045]} /><meshBasicMaterial color="#c6d9e6" transparent opacity={0.42} toneMapped={false} /></mesh>
     </group>)}
 
     <points ref={particles}>
       <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
       <pointsMaterial color="#d0edff" size={0.026} transparent opacity={0.46} sizeAttenuation depthWrite={false} />
     </points>
-    <fog attach="fog" args={["#080d14", 18, 88]} />
+    <fog attach="fog" args={["#111a29", 20, 76]} />
   </group>;
 }
 
@@ -405,16 +418,16 @@ function CameraRig({ progress, reducedMotion }: { progress: { current: number };
   return null;
 }
 
-export default function ProjectExhibitionWorld({ progress, reducedMotion, projects, activeIndex, active }: WorldProps) {
+export default function ProjectExhibitionWorld({ progress, reducedMotion, projects, active }: WorldProps) {
   return <Canvas camera={{ position: [-8, 4.15, 12.8], fov: 40, near: 0.1, far: 130 }} dpr={getAdaptiveDpr()} frameloop={active ? "always" : "never"} gl={{ alpha: true, antialias: false, powerPreference: "high-performance" }}>
     <color attach="background" args={["#101925"]} />
     <ambientLight intensity={0.86} />
-    <hemisphereLight args={["#e0f2ff", "#111a27", 0.86]} />
-    <directionalLight position={[0, 12, 7]} intensity={2.7} color="#e0f1ff" />
-    <directionalLight position={[0, 8, -6]} intensity={1.45} color="#9baeff" />
-    <pointLight position={[-5, 8, 0]} intensity={40} distance={30} color="#c1dcff" />
+    <hemisphereLight args={["#eff7ff", "#1b2638", 1.05]} />
+    <directionalLight position={[0, 12, 7]} intensity={3.1} color="#e8f4ff" />
+    <directionalLight position={[0, 8, -6]} intensity={2} color="#b7bcff" />
+    <pointLight position={[-5, 8, 0]} intensity={52} distance={34} color="#c1dcff" />
     <Corridor reducedMotion={reducedMotion} />
-    {projects.map((project, index) => <ProjectZone key={project.number} project={project} index={index} progress={progress} activeIndex={activeIndex} reducedMotion={reducedMotion} />)}
+    {projects.map((project, index) => <ProjectZone key={project.number} project={project} index={index} progress={progress} reducedMotion={reducedMotion} />)}
     <CameraRig progress={progress} reducedMotion={reducedMotion} />
   </Canvas>;
 }
