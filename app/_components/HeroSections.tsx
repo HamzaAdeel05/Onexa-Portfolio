@@ -1,20 +1,12 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "framer-motion";
-import { useSceneVisibility } from "./useSceneVisibility";
-
-const CosmicScene = dynamic(() => import("./CosmicScene"), {
-  ssr: false,
-  loading: () => <div aria-hidden="true" className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_38%_38%,#75d79b_0%,#176642_32%,#07140e_70%)] shadow-[0_0_100px_rgba(22,160,90,0.2)]" />,
-});
 
 export default function Hero() {
   const reducedMotion = useReducedMotion();
-  const scene = useSceneVisibility<HTMLDivElement>();
 
   return <section id="home" className="relative isolate flex min-h-[100svh] w-full items-center overflow-hidden bg-[#090d0b] text-[#f1f5f2]">
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_75%_48%,rgba(22,160,90,0.13),transparent_38%),radial-gradient(ellipse_at_8%_90%,rgba(165,31,50,0.07),transparent_35%)]" />
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_75%_48%,rgba(65,115,180,0.09),transparent_38%),radial-gradient(ellipse_at_8%_90%,rgba(165,31,50,0.07),transparent_35%)]" />
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 opacity-[0.075] [background-image:linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:90px_90px] [mask-image:linear-gradient(to_bottom,black,transparent_90%)]" />
 
     <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-2 px-5 pb-20 pt-28 sm:px-8 md:pt-32 lg:grid-cols-[0.92fr_1.08fr] lg:gap-0 lg:px-14 lg:pb-12">
@@ -42,9 +34,7 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      <div ref={scene.ref} className="relative mx-auto mt-2 aspect-square w-full max-w-[680px] lg:mt-0">
-        <div aria-hidden="true" className="absolute inset-[12%] rounded-full bg-[#16a05a]/10 blur-[75px]" />
-        {scene.shouldRender ? <CosmicScene active={scene.visible} /> : <div aria-hidden="true" className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_38%_38%,#75d79b_0%,#176642_32%,#07140e_70%)] shadow-[0_0_100px_rgba(22,160,90,0.2)]" />}
+      <div data-onexa-globe-target aria-hidden="true" className="relative mx-auto mt-2 aspect-square w-full max-w-[680px] lg:mt-0">
         <div className="pointer-events-none absolute bottom-[11%] left-[5%] flex items-center gap-3 border border-white/10 bg-[#101813]/75 px-4 py-3 backdrop-blur-xl">
           <span className="h-1.5 w-1.5 rounded-full bg-[#35d98a] shadow-[0_0_10px_#35d98a]" />
           <span className="text-[9px] uppercase tracking-[0.17em] text-white/70">ONEXA / Intelligence in motion</span>

@@ -173,6 +173,7 @@ export default function OnexaOrb({
 
     /* ---------- view state ---------- */
     let W = 0, H = 0, dpr = 1, R = 100, cx = 0, cy = 0, lw = 1;
+    let startR = 100, startX = 0, startY = 0, transition = 0;
     let yaw = 0.6, pitch = -0.35;
     const AUTO = reduce ? 0 : 0.16; // radians per second
     let prev = 0;
@@ -197,6 +198,9 @@ export default function OnexaOrb({
       R = Math.min(W * 0.265, H * 0.22);
       cx = W / 2;
       cy = H * 0.417;
+      startR = R;
+      startX = cx;
+      startY = cy;
       lw = Math.max(0.7, Math.min(1.3, R / 120));
     };
     const ro = new ResizeObserver(() => {
@@ -215,6 +219,18 @@ export default function OnexaOrb({
 
     /* ---------- draw ---------- */
     const draw = (t: number) => {
+      const target = document.querySelector<HTMLElement>("[data-onexa-globe-target]");
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        const targetRadius = Math.min(rect.width, rect.height) * 0.43;
+        cx = startX + (rect.left + rect.width / 2 - startX) * transition;
+        cy = startY + (rect.top + rect.height / 2 - startY) * transition;
+        R = startR + (targetRadius - startR) * transition;
+      } else {
+        cx = startX;
+        cy = startY;
+        R = startR;
+      }
       const cyw = Math.cos(yaw), syw = Math.sin(yaw);
       const cp = Math.cos(pitch), sp = Math.sin(pitch);
       const breathe = 1 + 0.012 * Math.sin(t * 1.3);
@@ -226,10 +242,10 @@ export default function OnexaOrb({
       ctx.lineJoin = "round";
 
       // soft halo hugging the shell
-      const g = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * 1.6);
+      const g = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * (1.6 + transition * 0.16));
       g.addColorStop(0, "rgba(90,210,255,0)");
-      g.addColorStop(0.28, "rgba(90,210,255,0.11)");
-      g.addColorStop(0.62, "rgba(151,105,255,0.07)");
+      g.addColorStop(0.28, `rgba(90,210,255,${0.11 + transition * 0.06})`);
+      g.addColorStop(0.62, `rgba(151,105,255,${0.07 + transition * 0.035})`);
       g.addColorStop(1, "rgba(90,210,255,0)");
       ctx.fillStyle = g;
       ctx.beginPath();
@@ -312,7 +328,7 @@ export default function OnexaOrb({
     };
 
     function start() {
-      if (running || reduce || document.hidden || !visible) return;
+      if (running || reduce || document.hidden || !visible || !targetInView()) return;
       running = true;
       prev = 0;
       raf = requestAnimationFrame(frame);
@@ -323,6 +339,27 @@ export default function OnexaOrb({
       cancelAnimationFrame(raf);
       prev = 0;
     }
+
+    function targetInView() {
+      if (transition < 1) return true;
+      const target = document.querySelector<HTMLElement>("[data-onexa-globe-target]");
+      if (!target) return false;
+      const rect = target.getBoundingClientRect();
+      return rect.bottom > 0 && rect.top < H && rect.right > 0 && rect.left < W;
+    }
+
+    const onScroll = () => {
+      transition = reduce
+        ? (window.scrollY > 0 ? 1 : 0)
+        : Math.min(1, Math.max(0, window.scrollY / Math.max(window.innerHeight * 0.7, 1)));
+      poster.style.setProperty("--intro-progress", String(transition));
+      if (reduce) draw(0);
+      else if (targetInView()) start();
+      else stop();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    onScroll();
 
     const onDocumentVisibility = () => {
       if (document.hidden) stop();
@@ -338,6 +375,8 @@ export default function OnexaOrb({
       ro.disconnect();
       visibility.disconnect();
       document.removeEventListener("visibilitychange", onDocumentVisibility);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, []);
 
