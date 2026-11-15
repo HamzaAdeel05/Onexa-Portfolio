@@ -35,10 +35,6 @@ export default function Hero() {
       </motion.div>
 
       <div data-onexa-globe-target aria-hidden="true" className="relative mx-auto mt-2 aspect-square w-full max-w-[680px] lg:mt-0">
-        <div className="pointer-events-none absolute bottom-[11%] left-[5%] flex items-center gap-3 border border-white/10 bg-[#101813]/75 px-4 py-3 backdrop-blur-xl">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#35d98a] shadow-[0_0_10px_#35d98a]" />
-          <span className="text-[9px] uppercase tracking-[0.17em] text-white/70">ONEXA / Intelligence in motion</span>
-        </div>
         <span className="pointer-events-none absolute bottom-[4%] right-[4%] text-[8px] uppercase tracking-[0.2em] text-white/35">FIG. 001 · COSMIC INTELLIGENCE</span>
       </div>
     </div>
