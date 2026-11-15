@@ -35,7 +35,6 @@ export default function Hero() {
       </motion.div>
 
       <div data-onexa-globe-target aria-hidden="true" className="relative mx-auto mt-2 aspect-square w-full max-w-[680px] lg:mt-0">
-        <span className="pointer-events-none absolute bottom-[4%] right-[4%] text-[8px] uppercase tracking-[0.2em] text-white/35">FIG. 001 · COSMIC INTELLIGENCE</span>
       </div>
     </div>
 
