@@ -2,14 +2,22 @@
 
 :root {
   color-scheme: dark;
-  --background: #090d0b;
-  --surface: #101813;
-  --forest: #153b29;
-  --emerald: #16a05a;
-  --emerald-light: #35d98a;
-  --crimson: #a51f32;
-  --foreground: #f1f5f2;
-  --muted: #9aa79e;
+  --midnight-black: #080B14;
+  --deep-navy: #101725;
+  --secondary-navy: #171E2C;
+  --metallic-silver: #E5EAF3;
+  --pure-white: #F8FAFF;
+  --electric-blue: #1677FF;
+  --bright-blue: #0066FF;
+  --cyan-blue: #00A8FF;
+  --cool-steel: #8995A8;
+  --border-steel-blue: rgb(137 149 168 / 18%);
+  --shadow-blue: 0 18px 60px rgb(0 102 255 / 18%);
+  --gradient-brand: linear-gradient(110deg, var(--metallic-silver), var(--electric-blue));
+  --background: var(--midnight-black);
+  --surface: var(--deep-navy);
+  --foreground: var(--metallic-silver);
+  --muted: var(--cool-steel);
   --font-display: var(--font-geist-sans), sans-serif;
 }
 
@@ -22,8 +30,8 @@ body {
   color: var(--foreground);
   font-family: var(--font-display);
 }
-::selection { background: rgb(53 217 138 / 30%); color: #fff; }
-:focus-visible { outline: 2px solid var(--emerald-light); outline-offset: 4px; }
+::selection { background: rgb(22 119 255 / 30%); color: var(--pure-white); }
+:focus-visible { outline: 2px solid var(--cyan-blue); outline-offset: 4px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }

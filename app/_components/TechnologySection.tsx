@@ -11,7 +11,7 @@ const technologies = [
     tools: ["Three.js", "React Three Fiber", "Drei"],
     icon: "✳",
     position: "top",
-    color: "green",
+    color: "blue",
   },
   {
     id: "02",
@@ -20,7 +20,7 @@ const technologies = [
     tools: ["Framer Motion", "GSAP", "ScrollTrigger"],
     icon: "⌘",
     position: "right",
-    color: "green",
+    color: "blue",
   },
   {
     id: "03",
@@ -29,7 +29,7 @@ const technologies = [
     tools: ["Next.js", "React", "Tailwind CSS"],
     icon: "</>",
     position: "bottom",
-    color: "green",
+    color: "blue",
   },
   {
     id: "04",
@@ -38,7 +38,7 @@ const technologies = [
     tools: ["Lenis", "WebGL", "Cloudflare Workers"],
     icon: "◈",
     position: "left",
-    color: "green",
+    color: "blue",
   },
 ];
 
@@ -55,10 +55,10 @@ export default function TechnologySection() {
   return (
     <section
       id="technology"
-      className="relative overflow-hidden bg-[#090B09] px-5 py-28 text-white sm:px-8 lg:px-16"
+      className="relative overflow-hidden bg-[var(--midnight-black)] px-5 py-28 text-white sm:px-8 lg:px-16"
     >
       {/* Background lighting */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#174B32]/10 blur-[150px]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--secondary-navy)]/10 blur-[150px]" />
 
       <div className="relative mx-auto max-w-7xl">
 
@@ -71,8 +71,8 @@ export default function TechnologySection() {
           className="mb-16"
         >
           <div className="mb-6 flex items-center gap-3">
-            <span className="h-px w-10 bg-[#3F9B68]" />
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#65B989]">
+            <span className="h-px w-10 bg-[var(--electric-blue)]" />
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--electric-blue)]">
               Technology / 06
             </span>
           </div>
@@ -80,7 +80,7 @@ export default function TechnologySection() {
           <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight sm:text-6xl lg:text-7xl">
             Built with technology.
             <br />
-            <span className="text-[#65B989]">
+            <span className="text-[var(--electric-blue)]">
               Tuned for experience.
             </span>
           </h2>
@@ -103,7 +103,7 @@ export default function TechnologySection() {
               <g key={index}>
                 <motion.path
                   d={`M350 250 L${node.x} ${node.y}`}
-                  stroke={index % 2 === 0 ? "#39865A" : "#873642"}
+                  stroke={index % 2 === 0 ? "#0066FF" : "#0066FF"}
                   strokeWidth="1.2"
                   strokeDasharray="5 7"
                   initial={{ pathLength: 0, opacity: 0 }}
@@ -119,7 +119,7 @@ export default function TechnologySection() {
                   cx={node.x}
                   cy={node.y}
                   r="4"
-                  fill={index % 2 === 0 ? "#65B989" : "#E47B86"}
+                  fill={index % 2 === 0 ? "#1677FF" : "#00A8FF"}
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
@@ -134,7 +134,7 @@ export default function TechnologySection() {
                 <motion.circle
                   key={`particle-${index}`}
                   r="3"
-                  fill={index % 2 === 0 ? "#65B989" : "#E47B86"}
+                  fill={index % 2 === 0 ? "#1677FF" : "#00A8FF"}
                   animate={{
                     cx: [350, node.x],
                     cy: [250, node.y],
@@ -156,9 +156,9 @@ export default function TechnologySection() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="absolute left-1/2 top-1/2 z-20 flex h-52 w-52 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-[#65B989]/40 bg-[#101A13] shadow-[0_0_80px_rgba(63,155,104,0.15)]"
+            className="absolute left-1/2 top-1/2 z-20 flex h-52 w-52 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-[var(--electric-blue)]/40 bg-[var(--deep-navy)] shadow-[0_0_80px_rgba(22,119,255,0.15)]"
           >
-            <div className="absolute inset-3 rounded-full border border-dashed border-[#65B989]/20" />
+            <div className="absolute inset-3 rounded-full border border-dashed border-[var(--electric-blue)]/20" />
 
             <motion.div
               animate={reducedMotion ? undefined : { rotate: 360 }}
@@ -167,18 +167,18 @@ export default function TechnologySection() {
                 repeat: Infinity,
                 ease: "linear",
               }}
-              className="absolute inset-[-9px] rounded-full border border-[#65B989]/10 border-t-[#65B989]/60"
+              className="absolute inset-[-9px] rounded-full border border-[var(--electric-blue)]/10 border-t-[var(--electric-blue)]/60"
             />
 
             <span className="text-5xl font-semibold tracking-tight">
-              OPI<sup className="text-[#65B989]">2</sup>
+              OPI<sup className="text-[var(--electric-blue)]">2</sup>
             </span>
 
             <span className="mt-3 text-[9px] uppercase tracking-[0.22em] text-white/45">
               ONEXA INTELLIGENCE
             </span>
 
-            <span className="mt-2 text-[8px] text-[#65B989]">
+            <span className="mt-2 text-[8px] text-[var(--electric-blue)]">
               PERSONALIZED INTELLIGENCE
             </span>
           </motion.div>
@@ -192,7 +192,7 @@ export default function TechnologySection() {
               "left-0 top-1/2 -translate-y-1/2",
             ];
 
-            const green = item.color === "green";
+            const primaryAccent = item.color === "blue";
 
             return (
               <motion.div
@@ -203,13 +203,13 @@ export default function TechnologySection() {
                 transition={{ duration: 0.6, delay: index * 0.15 }}
                 className={`absolute z-10 w-[225px] ${positions[index]}`}
               >
-                <div className="group rounded-2xl border border-white/10 bg-[#111713]/95 p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#65B989]/40 hover:bg-[#152019]">
+                <div className="group rounded-2xl border border-white/10 bg-[var(--secondary-navy)]/95 p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[var(--electric-blue)]/40 hover:bg-[var(--secondary-navy)]">
                   <div className="mb-5 flex items-center justify-between">
                     <span
                       className={`flex h-10 w-10 items-center justify-center rounded-xl border text-lg ${
-                        green
-                          ? "border-[#65B989]/30 bg-[#174B32]/30 text-[#65B989]"
-                          : "border-[#E47B86]/30 bg-[#641D29]/30 text-[#E47B86]"
+                        primaryAccent
+                          ? "border-[var(--electric-blue)]/30 bg-[var(--secondary-navy)]/30 text-[var(--electric-blue)]"
+                          : "border-[var(--cyan-blue)]/30 bg-[var(--deep-navy)]/30 text-[var(--cyan-blue)]"
                       }`}
                     >
                       {item.icon}
@@ -250,17 +250,17 @@ export default function TechnologySection() {
             initial={reducedMotion ? false : { opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="mx-auto mb-8 flex h-44 w-44 flex-col items-center justify-center rounded-full border border-[#65B989]/40 bg-[#101A13] shadow-[0_0_60px_rgba(63,155,104,0.12)]"
+            className="mx-auto mb-8 flex h-44 w-44 flex-col items-center justify-center rounded-full border border-[var(--electric-blue)]/40 bg-[var(--deep-navy)] shadow-[0_0_60px_rgba(22,119,255,0.12)]"
           >
             <span className="text-5xl font-semibold">
-              OPI<sup className="text-[#65B989]">2</sup>
+              OPI<sup className="text-[var(--electric-blue)]">2</sup>
             </span>
             <span className="mt-3 text-[9px] uppercase tracking-widest text-white/40">
               ONEXA INTELLIGENCE
             </span>
           </motion.div>
 
-          <div className="mb-8 text-center text-xs uppercase tracking-[0.2em] text-[#65B989]">
+          <div className="mb-8 text-center text-xs uppercase tracking-[0.2em] text-[var(--electric-blue)]">
             ↓ Connected Technology Ecosystem
           </div>
 
@@ -272,10 +272,10 @@ export default function TechnologySection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: reducedMotion ? 0 : index * 0.1 }}
-                className="rounded-2xl border border-white/10 bg-[#111713] p-6"
+                className="rounded-2xl border border-white/10 bg-[var(--secondary-navy)] p-6"
               >
                 <div className="mb-4 flex items-center justify-between">
-                  <span className="text-2xl text-[#65B989]">
+                  <span className="text-2xl text-[var(--electric-blue)]">
                     {item.icon}
                   </span>
                   <span className="font-mono text-xs text-white/30">
@@ -312,18 +312,18 @@ export default function TechnologySection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="relative overflow-hidden rounded-3xl border border-[#65B989]/20 bg-[#101812] p-8 sm:p-12 lg:p-16"
+          className="relative overflow-hidden rounded-3xl border border-[var(--electric-blue)]/20 bg-[var(--deep-navy)] p-8 sm:p-12 lg:p-16"
         >
-          <div className="pointer-events-none absolute -right-20 -top-32 h-80 w-80 rounded-full bg-[#28784A]/20 blur-[100px]" />
+          <div className="pointer-events-none absolute -right-20 -top-32 h-80 w-80 rounded-full bg-[var(--bright-blue)]/20 blur-[100px]" />
 
           <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
             <div>
-              <span className="mb-5 block text-xs font-semibold uppercase tracking-[0.25em] text-[#65B989]">
+              <span className="mb-5 block text-xs font-semibold uppercase tracking-[0.25em] text-[var(--electric-blue)]">
                 Our Intelligence Vision
               </span>
 
               <h3 className="text-5xl font-semibold tracking-tight sm:text-7xl">
-                OPI<sup className="text-[#65B989]">2</sup>
+                OPI<sup className="text-[var(--electric-blue)]">2</sup>
               </h3>
 
               <p className="mt-4 text-xs uppercase tracking-[0.2em] text-white/40">
@@ -337,8 +337,8 @@ export default function TechnologySection() {
               </p>
 
               <div className="mt-8 flex items-center gap-3">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-[#65B989]" />
-                <span className="text-xs uppercase tracking-[0.18em] text-[#65B989]">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--electric-blue)]" />
+                <span className="text-xs uppercase tracking-[0.18em] text-[var(--electric-blue)]">
                   Intelligence with purpose.
                 </span>
               </div>
@@ -353,7 +353,7 @@ export default function TechnologySection() {
           </p>
 
           <h3 className="mt-5 text-3xl font-medium sm:text-5xl">
-            Intelligence is the <span className="text-[#65B989]">difference.</span>
+            Intelligence is the <span className="text-[var(--electric-blue)]">difference.</span>
           </h3>
         </div>
 

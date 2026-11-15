@@ -42,7 +42,7 @@ export const exhibitionProjects: ExhibitionProject[] = [
     preview: "B2B LEAD GENERATION DASHBOARD",
     dashboardLabels: ["PROSPECTING", "EMAIL OUTREACH", "LEAD PIPELINE"],
     dashboardValues: ["FIND + QUALIFY", "AI PERSONALIZED", "TRACK + MANAGE"], demoUrl: "#contact", githubUrl: "#contact",
-    visualization: "business-network", accent: "#73e8c2", secondary: "#68a8ff", revealRange: 1.1,
+    visualization: "business-network", accent: "#00A8FF", secondary: "#70B7FF", revealRange: 1.1,
     supportingDisplays: ["Lead discovery", "Qualified businesses", "Email preview", "Campaign manager", "Outreach analytics", "Email activity", "Business profiles", "Workflow status"].map((label, i) => ({ label, kind: (["analytics", "table", "conversation", "interface", "chart", "analytics", "table", "network"] as DisplayKind[])[i] })),
   },
   {
@@ -53,7 +53,7 @@ export const exhibitionProjects: ExhibitionProject[] = [
     preview: "SYMPTOM ASSESSMENT & HEALTH GUIDANCE",
     dashboardLabels: ["SYMPTOM INPUT", "AI ASSESSMENT", "HEALTH GUIDANCE"],
     dashboardValues: ["USER PROVIDED", "EDUCATIONAL", "NOT DIAGNOSIS"], demoUrl: "#contact", githubUrl: "#contact",
-    visualization: "medical-intelligence", accent: "#71e5e9", secondary: "#b8a1ff", revealRange: 1.05,
+    visualization: "medical-intelligence", accent: "#71e5e9", secondary: "#70B7FF", revealRange: 1.05,
     supportingDisplays: ["Assistant conversation", "Health information", "Care topics", "Knowledge pathways", "Application preview", "Information index", "Response context", "Topic analytics"].map((label, i) => ({ label, kind: (["conversation", "documents", "table", "network", "interface", "documents", "conversation", "chart"] as DisplayKind[])[i] })),
   },
   {
@@ -64,7 +64,7 @@ export const exhibitionProjects: ExhibitionProject[] = [
     preview: "PERSONAL FINANCE & BUDGET ANALYSIS",
     dashboardLabels: ["FINANCE INPUT", "AI ANALYSIS", "RECOMMENDATIONS"],
     dashboardValues: ["INCOME + SPENDING", "CASH FLOW", "NEXT STEPS"], demoUrl: "#contact", githubUrl: "#contact",
-    visualization: "financial-globe", accent: "#83dfff", secondary: "#c69bff", revealRange: 1.05,
+    visualization: "financial-globe", accent: "#83dfff", secondary: "#70B7FF", revealRange: 1.05,
     supportingDisplays: ["Financial overview", "Market signals", "Analysis trends", "Performance metrics", "Data insights", "Portfolio view", "Trend analysis", "API status"].map((label, i) => ({ label, kind: (["analytics", "chart", "chart", "analytics", "table", "interface", "chart", "network"] as DisplayKind[])[i] })),
   },
   {
@@ -75,7 +75,7 @@ export const exhibitionProjects: ExhibitionProject[] = [
     preview: "DOCUMENT SEARCH & QUESTION ANSWERING",
     dashboardLabels: ["DOCUMENT UPLOAD", "RETRIEVAL", "ANSWER"],
     dashboardValues: ["YOUR SOURCES", "FAISS SEARCH", "GROUNDED"], demoUrl: "#contact", githubUrl: "#contact",
-    visualization: "knowledge-graph", accent: "#a8c8ff", secondary: "#81e2c9", revealRange: 1.05,
+    visualization: "knowledge-graph", accent: "#a8c8ff", secondary: "#00A8FF", revealRange: 1.05,
     supportingDisplays: ["Document index", "Knowledge retrieval", "Question and answer", "Source documents", "Vector search", "Connected topics", "Search activity", "Context chunks"].map((label, i) => ({ label, kind: (["documents", "network", "conversation", "documents", "analytics", "network", "chart", "table"] as DisplayKind[])[i] })),
   },
 ];
@@ -127,8 +127,8 @@ export default function SelectedWork() {
 
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between px-5 pb-5 pt-24 sm:px-8 sm:pb-8 lg:px-12 lg:pt-10">
         <div className="flex items-start justify-between gap-6">
-          <div className="flex items-center gap-3 text-[9px] font-medium uppercase tracking-[.28em] text-[#b4e8d7]/75 sm:text-[10px]"><span className="h-px w-8 bg-[#78e7c0]"/>ONEXA / IMMERSIVE PROJECT ARCHIVE</div>
-          <div className="text-right font-mono text-[9px] tracking-[.2em] text-white/55 sm:text-[10px]">{project.number} <span className="text-white/25">/ {String(exhibitionProjects.length).padStart(2, "0")}</span><div className="mt-2 flex justify-end gap-1">{exhibitionProjects.map((item, i) => <span key={item.number} className={`h-px w-5 transition-colors ${i === active ? "bg-[#76e8c0]" : "bg-white/25"}`} />)}</div></div>
+          <div className="flex items-center gap-3 text-[9px] font-medium uppercase tracking-[.28em] text-[var(--cool-steel)]/75 sm:text-[10px]"><span className="h-px w-8 bg-[var(--cyan-blue)]"/>ONEXA / IMMERSIVE PROJECT ARCHIVE</div>
+          <div className="text-right font-mono text-[9px] tracking-[.2em] text-white/55 sm:text-[10px]">{project.number} <span className="text-white/25">/ {String(exhibitionProjects.length).padStart(2, "0")}</span><div className="mt-2 flex justify-end gap-1">{exhibitionProjects.map((item, i) => <span key={item.number} className={`h-px w-5 transition-colors ${i === active ? "bg-[var(--cyan-blue)]" : "bg-white/25"}`} />)}</div></div>
         </div>
       </div>
 
@@ -161,7 +161,7 @@ export default function SelectedWork() {
         </AnimatePresence>
       </div>
 
-      <div aria-hidden="true" className="pointer-events-none absolute bottom-5 right-5 z-10 hidden text-right text-[8px] uppercase tracking-[.18em] text-white/35 sm:block lg:bottom-10 lg:right-12">Vertical scroll moves the exhibition camera <span className="text-[#76e8c0]/70">↗</span></div>
+      <div aria-hidden="true" className="pointer-events-none absolute bottom-5 right-5 z-10 hidden text-right text-[8px] uppercase tracking-[.18em] text-white/35 sm:block lg:bottom-10 lg:right-12">Vertical scroll moves the exhibition camera <span className="text-[var(--cyan-blue)]/70">↗</span></div>
     </section>
   );
 }

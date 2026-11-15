@@ -74,30 +74,30 @@ function ProjectSeed({ progress, reducedMotion }: SceneProps) {
     <group ref={crystal}>
       <mesh>
         <icosahedronGeometry args={[0.78, 1]} />
-        <meshPhysicalMaterial color="#101813" emissive="#073b38" emissiveIntensity={0.48} metalness={0.62} roughness={0.26} clearcoat={0.75} />
+        <meshPhysicalMaterial color="#101725" emissive="#082b55" emissiveIntensity={0.48} metalness={0.62} roughness={0.26} clearcoat={0.75} />
       </mesh>
       <mesh scale={1.03} rotation={[0.2, 0.42, 0.1]}>
         <icosahedronGeometry args={[0.78, 1]} />
-        <meshBasicMaterial color="#14beb3" wireframe transparent opacity={0.38} />
+        <meshBasicMaterial color="#00A8FF" wireframe transparent opacity={0.38} />
       </mesh>
       <lineSegments>
         <bufferGeometry><bufferAttribute attach="attributes-position" args={[links, 3]} /></bufferGeometry>
-        <lineBasicMaterial color="#35d98a" transparent opacity={0.56} />
+        <lineBasicMaterial color="#1677FF" transparent opacity={0.56} />
       </lineSegments>
       {nodes.map((point, i) => <mesh key={i} position={point.clone().multiplyScalar(0.95).toArray()}>
         <sphereGeometry args={[i % 3 === 0 ? 0.045 : 0.026, 10, 10]} />
-        <meshBasicMaterial color={i % 3 === 0 ? "#7ef4dc" : "#35d98a"} />
+        <meshBasicMaterial color={i % 3 === 0 ? "#00A8FF" : "#1677FF"} />
       </mesh>)}
     </group>
     <mesh ref={scanRing} rotation={[0.55, 0.2, 0]}>
       <torusGeometry args={[1.42, 0.018, 8, 144]} />
-      <meshPhysicalMaterial color="#35d98a" emissive="#16a05a" emissiveIntensity={0.75} metalness={0.78} roughness={0.22} />
+      <meshPhysicalMaterial color="#1677FF" emissive="#0066FF" emissiveIntensity={0.75} metalness={0.78} roughness={0.22} />
     </mesh>
     <mesh ref={scanSheet} rotation={[0, 0, 0]}>
       <planeGeometry args={[2.25, 0.016]} />
       <meshBasicMaterial color="#75fff0" transparent opacity={0.28} side={THREE.DoubleSide} depthWrite={false} />
     </mesh>
-    <pointLight color="#23d4bd" intensity={8} distance={4} />
+    <pointLight color="#00A8FF" intensity={8} distance={4} />
   </group>;
 }
 
@@ -135,7 +135,7 @@ function FragmentCloud({ progress, reducedMotion }: SceneProps) {
   });
   return <instancedMesh ref={mesh} args={[undefined, undefined, directions.length]}>
     <icosahedronGeometry args={[1, 0]} />
-    <meshStandardMaterial color="#12201d" emissive="#0c4a46" emissiveIntensity={0.52} metalness={0.66} roughness={0.27} />
+    <meshStandardMaterial color="#101725" emissive="#082b55" emissiveIntensity={0.52} metalness={0.66} roughness={0.27} />
   </instancedMesh>;
 }
 
@@ -149,16 +149,16 @@ function ArchitecturalFrame({ reducedMotion }: { reducedMotion: boolean }) {
     void delta;
   });
   return <group ref={root}>
-    <mesh rotation={[0.28, 0.35, 0]}><torusGeometry args={[2.2, 0.022, 8, 120]} /><meshStandardMaterial color="#41665a" metalness={0.82} roughness={0.28} /></mesh>
-    <mesh rotation={[1.1, -0.2, 0.55]}><torusGeometry args={[1.75, 0.016, 8, 120]} /><meshBasicMaterial color="#35d98a" transparent opacity={0.55} /></mesh>
-    <mesh rotation={[0.35, 0.75, 0.2]}><torusGeometry args={[1.32, 0.012, 8, 96]} /><meshBasicMaterial color="#17a8a0" transparent opacity={0.62} /></mesh>
+    <mesh rotation={[0.28, 0.35, 0]}><torusGeometry args={[2.2, 0.022, 8, 120]} /><meshStandardMaterial color="#34445F" metalness={0.82} roughness={0.28} /></mesh>
+    <mesh rotation={[1.1, -0.2, 0.55]}><torusGeometry args={[1.75, 0.016, 8, 120]} /><meshBasicMaterial color="#1677FF" transparent opacity={0.55} /></mesh>
+    <mesh rotation={[0.35, 0.75, 0.2]}><torusGeometry args={[1.32, 0.012, 8, 96]} /><meshBasicMaterial color="#1677FF" transparent opacity={0.62} /></mesh>
     {[0, 1, 2, 3].map((i) => <group key={i} rotation={[0, 0, (i / 4) * Math.PI * 2]}>
-      <mesh position={[1.65, 0, 0]} rotation={[0.2, 0.3, 0]}><boxGeometry args={[0.58, 0.7, 0.28]} /><meshStandardMaterial color="#101813" emissive="#0d342e" emissiveIntensity={0.28} metalness={0.74} roughness={0.3} /></mesh>
-      <mesh position={[1.35, 0, 0.12]}><cylinderGeometry args={[0.045, 0.045, 0.56, 12]} /><meshBasicMaterial color="#35d98a" /></mesh>
+      <mesh position={[1.65, 0, 0]} rotation={[0.2, 0.3, 0]}><boxGeometry args={[0.58, 0.7, 0.28]} /><meshStandardMaterial color="#101725" emissive="#082b55" emissiveIntensity={0.28} metalness={0.74} roughness={0.3} /></mesh>
+      <mesh position={[1.35, 0, 0.12]}><cylinderGeometry args={[0.045, 0.045, 0.56, 12]} /><meshBasicMaterial color="#1677FF" /></mesh>
     </group>)}
     {[0, 1, 2].map((i) => <mesh key={`glass-${i}`} position={[(i - 1) * 0.48, 0.3 - i * 0.12, -0.45 + i * 0.22]} rotation={[0.1, 0.24 * (i - 1), -0.12]}>
       <boxGeometry args={[0.94, 1.2, 0.025]} />
-      <meshPhysicalMaterial color="#12302a" transparent opacity={0.2} metalness={0.22} roughness={0.16} transmission={0.16} thickness={0.3} side={THREE.DoubleSide} />
+      <meshPhysicalMaterial color="#101725" transparent opacity={0.2} metalness={0.22} roughness={0.16} transmission={0.16} thickness={0.3} side={THREE.DoubleSide} />
     </mesh>)}
   </group>;
 }
@@ -169,17 +169,17 @@ function DevelopmentEngine({ reducedMotion }: { reducedMotion: boolean }) {
   return <group>
     <group ref={rotor}>
       {[0, 1, 2].map((layer) => <group key={layer} rotation={[0.25 * layer, 0.2 * layer, 0]}>
-        <mesh><torusGeometry args={[0.86 + layer * 0.26, 0.035, 10, 64]} /><meshStandardMaterial color={layer === 1 ? "#35d98a" : "#37584c"} metalness={0.82} roughness={0.24} emissive={layer === 1 ? "#0b5538" : "#06140e"} emissiveIntensity={0.5} /></mesh>
+        <mesh><torusGeometry args={[0.86 + layer * 0.26, 0.035, 10, 64]} /><meshStandardMaterial color={layer === 1 ? "#1677FF" : "#34445F"} metalness={0.82} roughness={0.24} emissive={layer === 1 ? "#082b55" : "#080B14"} emissiveIntensity={0.5} /></mesh>
         {[0, 1, 2, 3, 4, 5, 6, 7].map((tooth) => <mesh key={tooth} position={[Math.cos((tooth / 8) * Math.PI * 2) * (0.86 + layer * 0.26), Math.sin((tooth / 8) * Math.PI * 2) * (0.86 + layer * 0.26), 0]} rotation={[0, 0, (tooth / 8) * Math.PI * 2]}>
-          <boxGeometry args={[0.16, 0.1, 0.12]} /><meshStandardMaterial color="#253c34" metalness={0.8} roughness={0.26} />
+          <boxGeometry args={[0.16, 0.1, 0.12]} /><meshStandardMaterial color="#202B3C" metalness={0.8} roughness={0.26} />
         </mesh>)}
       </group>)}
     </group>
     {[0, 1, 2, 3, 4].map((i) => <group key={`module-${i}`} position={[Math.cos((i / 5) * Math.PI * 2) * 2.05, Math.sin((i / 5) * Math.PI * 2) * 1.35, (i % 2) * 0.42 - 0.2]} rotation={[0.15 * i, 0.22 * i, 0]}>
-      <mesh><boxGeometry args={[0.5, 0.68, 0.5]} /><meshStandardMaterial color="#101813" emissive="#123c2a" emissiveIntensity={0.45} metalness={0.68} roughness={0.3} /></mesh>
-      <mesh position={[0, 0, 0.27]}><boxGeometry args={[0.24, 0.08, 0.025]} /><meshBasicMaterial color="#35d98a" /></mesh>
+      <mesh><boxGeometry args={[0.5, 0.68, 0.5]} /><meshStandardMaterial color="#101725" emissive="#082b55" emissiveIntensity={0.45} metalness={0.68} roughness={0.3} /></mesh>
+      <mesh position={[0, 0, 0.27]}><boxGeometry args={[0.24, 0.08, 0.025]} /><meshBasicMaterial color="#1677FF" /></mesh>
     </group>)}
-    <mesh rotation={[0.5, 0.2, 0]}><torusGeometry args={[2.52, 0.012, 6, 128]} /><meshBasicMaterial color="#35d98a" transparent opacity={0.38} /></mesh>
+    <mesh rotation={[0.5, 0.2, 0]}><torusGeometry args={[2.52, 0.012, 6, 128]} /><meshBasicMaterial color="#1677FF" transparent opacity={0.38} /></mesh>
   </group>;
 }
 
@@ -196,7 +196,7 @@ function DataFilaments() {
   }, []);
   return <lineSegments>
     <bufferGeometry><bufferAttribute attach="attributes-position" args={[points, 3]} /></bufferGeometry>
-    <lineBasicMaterial color="#35d98a" transparent opacity={0.58} />
+    <lineBasicMaterial color="#1677FF" transparent opacity={0.58} />
   </lineSegments>;
 }
 
@@ -217,7 +217,7 @@ function CreationSystem({ progress, reducedMotion }: SceneProps) {
     if (stageLight.current) {
       const activate = THREE.MathUtils.smoothstep(p, 0.68, 0.92);
       stageLight.current.intensity = 7 + activate * 8;
-      stageLight.current.color.set(activate > 0.55 ? "#35d98a" : "#20bfb0");
+      stageLight.current.color.set(activate > 0.55 ? "#1677FF" : "#00A8FF");
     }
   });
   return <>
@@ -229,9 +229,9 @@ function CreationSystem({ progress, reducedMotion }: SceneProps) {
     </group>
     <mesh position={[0, -2.7, -0.5]} rotation={[-Math.PI / 2, 0, 0]}>
       <ringGeometry args={[2.15, 2.17, 100]} />
-      <meshBasicMaterial color="#35d98a" transparent opacity={0.24} side={THREE.DoubleSide} />
+      <meshBasicMaterial color="#1677FF" transparent opacity={0.24} side={THREE.DoubleSide} />
     </mesh>
-    <pointLight ref={stageLight} position={[0.2, 1, 2.7]} color="#20bfb0" intensity={7} distance={7} />
+    <pointLight ref={stageLight} position={[0.2, 1, 2.7]} color="#00A8FF" intensity={7} distance={7} />
   </>;
 }
 
@@ -251,11 +251,11 @@ function CameraRig({ progress, reducedMotion }: SceneProps) {
 
 function Scene({ progress, reducedMotion }: SceneProps) {
   return <>
-    <color attach="background" args={["#090d0b"]} />
-    <fog attach="fog" args={["#090d0b", 12, 27]} />
+    <color attach="background" args={["#080B14"]} />
+    <fog attach="fog" args={["#080B14", 12, 27]} />
     <ambientLight intensity={0.55} />
-    <directionalLight position={[-4, 5, 6]} color="#e0f4ea" intensity={1.4} />
-    <directionalLight position={[4, -2, -4]} color="#16a05a" intensity={0.75} />
+    <directionalLight position={[-4, 5, 6]} color="#E5EAF3" intensity={1.4} />
+    <directionalLight position={[4, -2, -4]} color="#0066FF" intensity={0.75} />
     <CreationSystem progress={progress} reducedMotion={reducedMotion} />
     <CameraRig progress={progress} reducedMotion={reducedMotion} />
   </>;
@@ -268,7 +268,7 @@ export default function WorkflowWorld({ progress, reducedMotion, active }: Props
     frameloop={active ? "always" : "never"}
     camera={{ position: [0, 0, 9.1], fov: 40, near: 0.1, far: 50 }}
     gl={{ alpha: false, antialias: false, powerPreference: "low-power" }}
-    fallback={<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_58%_48%,rgba(22,160,90,.2),transparent_64%)]" aria-label="ONEXA digital creation environment" />}
+    fallback={<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_58%_48%,rgba(0,102,255,.2),transparent_64%)]" aria-label="ONEXA digital creation environment" />}
   >
     <Scene progress={progress} reducedMotion={reducedMotion} />
   </Canvas>;

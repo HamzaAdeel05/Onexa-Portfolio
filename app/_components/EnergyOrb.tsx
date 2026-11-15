@@ -252,7 +252,7 @@ export default function OnexaOrb({
       const g = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * (1.6 + transition * 0.16));
       g.addColorStop(0, "rgba(90,210,255,0)");
       g.addColorStop(0.28, `rgba(90,210,255,${0.11 + transition * 0.06})`);
-      g.addColorStop(0.62, `rgba(151,105,255,${0.07 + transition * 0.035})`);
+      g.addColorStop(0.62, `rgba(22,119,255,${0.07 + transition * 0.035})`);
       g.addColorStop(1, "rgba(90,210,255,0)");
       ctx.fillStyle = g;
       ctx.beginPath();
@@ -313,7 +313,7 @@ export default function OnexaOrb({
         ctx.arc(px, py, rad, 0, 6.2832);
         ctx.fill();
         if (st.big) {
-          ctx.fillStyle = `rgba(170,132,255,${(al * 0.24).toFixed(3)})`;
+          ctx.fillStyle = `rgba(0,168,255,${(al * 0.24).toFixed(3)})`;
           ctx.beginPath();
           ctx.arc(px, py, rad * 4, 0, 6.2832);
           ctx.fill();

@@ -40,19 +40,19 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-[#090B09] px-5 pt-28 text-white sm:px-8 lg:px-16"
+      className="relative overflow-hidden bg-[var(--midnight-black)] px-5 pt-28 text-white sm:px-8 lg:px-16"
     >
       {/* Background lighting */}
-      <div className="pointer-events-none absolute -right-40 top-20 h-96 w-96 rounded-full bg-[#174B32]/15 blur-[130px]" />
-      <div className="pointer-events-none absolute -left-40 bottom-40 h-96 w-96 rounded-full bg-[#7B202C]/10 blur-[130px]" />
+      <div className="pointer-events-none absolute -right-40 top-20 h-96 w-96 rounded-full bg-[var(--secondary-navy)]/15 blur-[130px]" />
+      <div className="pointer-events-none absolute -left-40 bottom-40 h-96 w-96 rounded-full bg-[var(--deep-navy)]/10 blur-[130px]" />
 
       <div className="relative mx-auto max-w-7xl">
 
         {/* Heading */}
         <motion.div {...fadeUp} className="mb-20">
           <div className="mb-6 flex items-center gap-3">
-            <span className="h-px w-10 bg-[#3F9B68]" />
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#65B989]">
+            <span className="h-px w-10 bg-[var(--electric-blue)]" />
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--electric-blue)]">
               Contact / 07
             </span>
           </div>
@@ -60,7 +60,7 @@ export default function ContactSection() {
           <h2 className="text-5xl font-medium leading-[1.1] tracking-tight sm:text-7xl lg:text-8xl">
             Have an idea?
             <br />
-            <span className="text-[#65B989]">
+            <span className="text-[var(--electric-blue)]">
               Let's make it happen.
             </span>
           </h2>
@@ -78,7 +78,7 @@ export default function ContactSection() {
           {/* Contact information */}
           <motion.div {...fadeUp} className="flex flex-col">
 
-            <span className="mb-8 text-xs uppercase tracking-[0.25em] text-[#65B989]">
+            <span className="mb-8 text-xs uppercase tracking-[0.25em] text-[var(--electric-blue)]">
               Get in Touch
             </span>
 
@@ -97,7 +97,7 @@ export default function ContactSection() {
               href="mailto:info@onexa.com"
               className="group mb-8 flex items-center gap-5"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#65B989]/20 bg-[#174B32]/20 text-xl text-[#65B989] transition-colors group-hover:bg-[#174B32]/40">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--electric-blue)]/20 bg-[var(--secondary-navy)]/20 text-xl text-[var(--electric-blue)] transition-colors group-hover:bg-[var(--secondary-navy)]/40">
                 ✉
               </div>
 
@@ -105,7 +105,7 @@ export default function ContactSection() {
                 <span className="mb-1 block text-xs text-white/35">
                   Email Us
                 </span>
-                <span className="text-base transition-colors group-hover:text-[#65B989]">
+                <span className="text-base transition-colors group-hover:text-[var(--electric-blue)]">
                   info@onexa.com
                 </span>
               </div>
@@ -113,7 +113,7 @@ export default function ContactSection() {
 
             {/* Location */}
             <div className="mb-12 flex items-center gap-5">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#E47B86]/20 bg-[#641D29]/20 text-xl text-[#E47B86]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--cyan-blue)]/20 bg-[var(--deep-navy)]/20 text-xl text-[var(--cyan-blue)]">
                 ◎
               </div>
 
@@ -133,18 +133,18 @@ export default function ContactSection() {
                 Connect with ONEXA
               </span>
 
-              <a href="mailto:info@onexa.com" className="inline-flex items-center gap-2 rounded-full border border-white/10 px-5 py-3 text-xs text-white/55 transition-all duration-300 hover:border-[#65B989]/50 hover:text-[#65B989]">Email ONEXA <span aria-hidden="true">↗</span></a>
+              <a href="mailto:info@onexa.com" className="inline-flex items-center gap-2 rounded-full border border-white/10 px-5 py-3 text-xs text-white/55 transition-all duration-300 hover:border-[var(--electric-blue)]/50 hover:text-[var(--electric-blue)]">Email ONEXA <span aria-hidden="true">↗</span></a>
             </div>
           </motion.div>
 
           {/* Contact form */}
           <motion.div
             {...fadeUp}
-            className="rounded-3xl border border-white/10 bg-[#111411] p-6 sm:p-10"
+            className="rounded-3xl border border-white/10 bg-[var(--secondary-navy)] p-6 sm:p-10"
           >
             <div className="mb-9 flex items-center justify-between">
               <div>
-                <span className="mb-2 block text-xs uppercase tracking-[0.2em] text-[#65B989]">
+                <span className="mb-2 block text-xs uppercase tracking-[0.2em] text-[var(--electric-blue)]">
                   Project Inquiry
                 </span>
                 <h3 className="text-2xl font-medium">
@@ -152,7 +152,7 @@ export default function ContactSection() {
                 </h3>
               </div>
 
-              <span className="hidden text-3xl text-[#65B989] sm:block">
+              <span className="hidden text-3xl text-[var(--electric-blue)] sm:block">
                 ↗
               </span>
             </div>
@@ -174,7 +174,7 @@ export default function ContactSection() {
                   onChange={(e) =>
                     setForm({ ...form, name: e.target.value })
                   }
-                  className="w-full border-b border-white/15 bg-transparent py-3 text-sm text-white outline-none transition-colors placeholder:text-white/20 focus:border-[#65B989]"
+                  className="w-full border-b border-white/15 bg-transparent py-3 text-sm text-white outline-none transition-colors placeholder:text-white/20 focus:border-[var(--electric-blue)]"
                 />
               </div>
 
@@ -193,7 +193,7 @@ export default function ContactSection() {
                   onChange={(e) =>
                     setForm({ ...form, email: e.target.value })
                   }
-                  className="w-full border-b border-white/15 bg-transparent py-3 text-sm text-white outline-none transition-colors placeholder:text-white/20 focus:border-[#65B989]"
+                  className="w-full border-b border-white/15 bg-transparent py-3 text-sm text-white outline-none transition-colors placeholder:text-white/20 focus:border-[var(--electric-blue)]"
                 />
               </div>
 
@@ -207,7 +207,7 @@ export default function ContactSection() {
                   placeholder="Company name"
                   value={form.company}
                   onChange={(e) => setForm({ ...form, company: e.target.value })}
-                  className="w-full border-b border-white/15 bg-transparent py-3 text-sm text-white outline-none transition-colors placeholder:text-white/20 focus:border-[#65B989]"
+                  className="w-full border-b border-white/15 bg-transparent py-3 text-sm text-white outline-none transition-colors placeholder:text-white/20 focus:border-[var(--electric-blue)]"
                 />
               </div>
 
@@ -223,7 +223,7 @@ export default function ContactSection() {
                   onChange={(e) =>
                     setForm({ ...form, service: e.target.value })
                   }
-                  className="w-full border-b border-white/15 bg-[#111411] py-3 text-sm text-white outline-none focus:border-[#65B989]"
+                  className="w-full border-b border-white/15 bg-[var(--secondary-navy)] py-3 text-sm text-white outline-none focus:border-[var(--electric-blue)]"
                 >
                   <option>Web Development</option>
                   <option>AI Solutions</option>
@@ -249,14 +249,14 @@ export default function ContactSection() {
                   onChange={(e) =>
                     setForm({ ...form, message: e.target.value })
                   }
-                  className="w-full resize-none border-b border-white/15 bg-transparent py-3 text-sm text-white outline-none transition-colors placeholder:text-white/20 focus:border-[#65B989]"
+                  className="w-full resize-none border-b border-white/15 bg-transparent py-3 text-sm text-white outline-none transition-colors placeholder:text-white/20 focus:border-[var(--electric-blue)]"
                 />
               </div>
 
               {/* Submit */}
               <button
                 type="submit"
-                className="group flex w-full items-center justify-between rounded-full bg-[#28623E] px-7 py-5 text-sm font-medium transition-all duration-300 hover:bg-[#39865A]"
+                className="group flex w-full items-center justify-between rounded-full bg-[var(--bright-blue)] px-7 py-5 text-sm font-medium transition-all duration-300 hover:bg-[var(--bright-blue)]"
               >
                 Send Project Inquiry
 
@@ -278,15 +278,15 @@ export default function ContactSection() {
           {...fadeUp}
           className="relative mt-32 overflow-hidden border-y border-white/10 py-20 text-center"
         >
-          <div className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#174B32]/15 blur-[100px]" />
+          <div className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--secondary-navy)]/15 blur-[100px]" />
 
-          <p className="relative mb-6 text-xs uppercase tracking-[0.3em] text-[#65B989]">
+          <p className="relative mb-6 text-xs uppercase tracking-[0.3em] text-[var(--electric-blue)]">
             One Vision. Next Future.
           </p>
 
           <h3 className="relative text-6xl font-semibold tracking-[-0.07em] sm:text-8xl lg:text-[140px]">
-            ONE<span className="text-[#65B989]">XA</span>
-            <span className="text-[#A12D3B]">.</span>
+            ONE<span className="text-[var(--electric-blue)]">XA</span>
+            <span className="text-[var(--bright-blue)]">.</span>
           </h3>
 
           <p className="relative mt-5 text-xs uppercase tracking-[0.2em] text-white/35">
@@ -300,7 +300,7 @@ export default function ContactSection() {
 
             <div>
               <a href="#home" className="text-2xl font-semibold tracking-[0.2em]">
-                ONE<span className="text-[#65B989]">XA</span>.
+                ONE<span className="text-[var(--electric-blue)]">XA</span>.
               </a>
 
               <p className="mt-3 text-xs text-white/35">
@@ -319,7 +319,7 @@ export default function ContactSection() {
                 <a
                   key={name}
                   href={link}
-                  className="transition-colors hover:text-[#65B989]"
+                  className="transition-colors hover:text-[var(--electric-blue)]"
                 >
                   {name}
                 </a>

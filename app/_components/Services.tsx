@@ -7,7 +7,7 @@ import { useSceneVisibility } from "./useSceneVisibility";
 
 const ServicesWorld = dynamic(() => import("./ServicesWorld"), {
   ssr: false,
-  loading: () => <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(22,160,90,.16),transparent_62%)]" />,
+  loading: () => <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,102,255,.16),transparent_62%)]" />,
 });
 
 const services = [
@@ -84,19 +84,19 @@ export default function ServicesSection() {
   }, [reducedMotion]);
 
   return (
-    <section id="services" className="relative overflow-x-clip bg-[#090d0b] px-5 py-24 text-[#f1f5f2] sm:px-8 sm:py-32 lg:px-16">
-      <div aria-hidden="true" className="pointer-events-none absolute -left-64 top-[28rem] h-[42rem] w-[42rem] rounded-full bg-[#153b29]/20 blur-[150px]" />
+    <section id="services" className="relative overflow-x-clip bg-[var(--midnight-black)] px-5 py-24 text-[var(--metallic-silver)] sm:px-8 sm:py-32 lg:px-16">
+      <div aria-hidden="true" className="pointer-events-none absolute -left-64 top-[28rem] h-[42rem] w-[42rem] rounded-full bg-[var(--secondary-navy)]/20 blur-[150px]" />
       <div className="relative mx-auto max-w-7xl">
         <header className="mb-12 max-w-3xl sm:mb-16">
-          <div className="mb-6 flex items-center gap-3"><span className="h-px w-10 bg-[#35d98a]"/><span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#35d98a]">02 / What we do</span></div>
-          <h2 className="text-4xl font-medium leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">IDEAS INTO<br/><span className="text-[#35d98a]">INTELLIGENCE.</span></h2>
-          <p className="mt-6 max-w-xl text-sm leading-7 text-[#9aa79e] sm:text-base">Transforming complex challenges into intelligent digital solutions.</p>
+          <div className="mb-6 flex items-center gap-3"><span className="h-px w-10 bg-[var(--electric-blue)]"/><span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--electric-blue)]">02 / What we do</span></div>
+          <h2 className="text-4xl font-medium leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">IDEAS INTO<br/><span className="text-[var(--electric-blue)]">INTELLIGENCE.</span></h2>
+          <p className="mt-6 max-w-xl text-sm leading-7 text-[var(--cool-steel)] sm:text-base">Transforming complex challenges into intelligent digital solutions.</p>
         </header>
 
-        <div ref={stage} className="relative grid h-[100svh] min-h-[620px] max-h-[1000px] grid-cols-1 overflow-hidden border-y border-white/[0.07] bg-[#090d0b] lg:h-[100svh] lg:max-h-none lg:grid-cols-[.9fr_1.1fr] lg:border">
+        <div ref={stage} className="relative grid h-[100svh] min-h-[620px] max-h-[1000px] grid-cols-1 overflow-hidden border-y border-white/[0.07] bg-[var(--midnight-black)] lg:h-[100svh] lg:max-h-none lg:grid-cols-[.9fr_1.1fr] lg:border">
           <div className="relative order-2 z-10 flex min-h-0 flex-col justify-center px-1 pb-16 sm:px-8 lg:order-1 lg:px-12 lg:pb-8 xl:px-16">
             <div className="mb-8 flex items-center gap-3 text-[9px] uppercase tracking-[.24em] text-white/35 sm:text-[10px]">
-              <span className="h-px w-8 bg-[#35d98a]" />
+              <span className="h-px w-8 bg-[var(--electric-blue)]" />
               <span>ONEXA / SERVICE SYSTEMS</span>
             </div>
             <div className="relative min-h-[240px] sm:min-h-[280px]">
@@ -107,19 +107,19 @@ export default function ServicesSection() {
                   className={`absolute inset-0 flex flex-col justify-center transition-[opacity,transform,visibility] duration-700 ease-out ${active === index ? "visible translate-y-0 opacity-100" : "invisible translate-y-5 opacity-0"}`}
                 >
                   <div className="mb-6 flex items-center gap-4">
-                    <span className="font-mono text-xs tracking-[.16em] text-[#35d98a]">/{service.n}</span>
+                    <span className="font-mono text-xs tracking-[.16em] text-[var(--electric-blue)]">/{service.n}</span>
                     <span className="h-px w-8 bg-white/15" />
                     <span className="text-[9px] uppercase tracking-[.22em] text-white/35">{service.kind}</span>
                   </div>
                   <h3 className="max-w-xl text-3xl font-medium leading-[1.08] tracking-tight sm:text-4xl lg:text-[clamp(2rem,3.2vw,3.6rem)]">{service.title}</h3>
-                  <p className="mt-5 max-w-md text-sm leading-7 text-[#9aa79e] sm:text-base">{service.text}</p>
-                  <motion.a href="#contact" whileHover={reducedMotion ? undefined : { x: 5 }} className="mt-8 inline-flex w-fit items-center gap-3 text-[10px] uppercase tracking-[.18em] text-[#35d98a] transition-colors hover:text-white">Discuss your project <span aria-hidden="true">↗</span></motion.a>
+                  <p className="mt-5 max-w-md text-sm leading-7 text-[var(--cool-steel)] sm:text-base">{service.text}</p>
+                  <motion.a href="#contact" whileHover={reducedMotion ? undefined : { x: 5 }} className="mt-8 inline-flex w-fit items-center gap-3 text-[10px] uppercase tracking-[.18em] text-[var(--electric-blue)] transition-colors hover:text-white">Discuss your project <span aria-hidden="true">↗</span></motion.a>
                 </article>
               ))}
             </div>
             <div className="absolute bottom-7 left-1 right-1 flex items-center gap-3 sm:left-8 sm:right-8 lg:left-12 lg:right-12 xl:left-16 xl:right-16">
               <div className="flex flex-1 gap-1.5" aria-label={`Chapter ${active + 1} of 4`}>
-                {services.map((service, index) => <span key={service.n} className={`h-px flex-1 transition-colors duration-500 ${index <= active ? "bg-[#35d98a]" : "bg-white/20"}`} />)}
+                {services.map((service, index) => <span key={service.n} className={`h-px flex-1 transition-colors duration-500 ${index <= active ? "bg-[var(--electric-blue)]" : "bg-white/20"}`} />)}
               </div>
               <span className="font-mono text-[10px] tracking-[.16em] text-white/45">{services[active].n} / 04</span>
               <span className="ml-2 hidden text-[9px] uppercase tracking-[.2em] text-white/25 sm:inline">Scroll to explore</span>
@@ -128,8 +128,8 @@ export default function ServicesSection() {
 
           <div ref={scene.ref} className="pointer-events-none absolute inset-0 order-1 lg:relative lg:order-2">
             {scene.shouldRender && <ServicesWorld progress={progress} reducedMotion={Boolean(reducedMotion)} active={scene.visible} />}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_50%,rgba(22,160,90,.12),transparent_66%)]" />
-            <div className="absolute right-5 top-5 text-[9px] uppercase tracking-[.2em] text-[#35d98a]/65 sm:right-8 sm:top-8">Continuous environment</div>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_50%,rgba(0,102,255,.12),transparent_66%)]" />
+            <div className="absolute right-5 top-5 text-[9px] uppercase tracking-[.2em] text-[var(--electric-blue)]/65 sm:right-8 sm:top-8">Continuous environment</div>
             <div className="absolute bottom-5 right-5 font-mono text-[9px] tracking-[.18em] text-white/25 sm:bottom-8 sm:right-8">FIG. {services[active].n} — ONEXA</div>
           </div>
         </div>

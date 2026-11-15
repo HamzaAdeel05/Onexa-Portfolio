@@ -34,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <SmoothScroll>
-          <a href="#main-content" className="sr-only z-[100] rounded bg-[#35d98a] px-4 py-2 text-black focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to content</a>
+          <a href="#main-content" className="sr-only z-[100] rounded bg-[var(--electric-blue)] px-4 py-2 text-black focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to content</a>
           <Navigation />
           {children}
         </SmoothScroll>

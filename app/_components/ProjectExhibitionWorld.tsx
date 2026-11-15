@@ -365,7 +365,7 @@ function Corridor({ reducedMotion }: { reducedMotion: boolean }) {
 
     {[-10.55, 10.55].map((z, i) => <group key={z}>
       <mesh position={[32, 4.35, z]}><boxGeometry args={[110, 8.8, 0.12]} /><meshPhysicalMaterial color={i ? "#152432" : "#182432"} transparent opacity={0.16} metalness={0.36} roughness={0.24} clearcoat={0.8} /></mesh>
-      <mesh position={[32, 1.1, z + (z < 0 ? 0.09 : -0.09)]}><boxGeometry args={[110, 0.045, 0.08]} /><meshBasicMaterial color={i ? "#a18cff" : "#68dfff"} transparent opacity={0.62} toneMapped={false} /></mesh>
+      <mesh position={[32, 1.1, z + (z < 0 ? 0.09 : -0.09)]}><boxGeometry args={[110, 0.045, 0.08]} /><meshBasicMaterial color={i ? "#70B7FF" : "#00A8FF"} transparent opacity={0.62} toneMapped={false} /></mesh>
       {Array.from({ length: 21 }, (_, panel) => <mesh key={panel} position={[-20 + panel * 5.2, 4.35, z + (z < 0 ? -0.1 : 0.1)]}><boxGeometry args={[0.055, 8.8, 0.06]} /><meshBasicMaterial color="#9ec8de" transparent opacity={0.3} /></mesh>)}
     </group>)}
 
@@ -389,7 +389,7 @@ function Corridor({ reducedMotion }: { reducedMotion: boolean }) {
     })}
 
     {[-1, 1].map((side) => <group key={side}>
-      <mesh position={[32, -0.98, side * 5.6]}><boxGeometry args={[110, 0.025, 0.045]} /><meshBasicMaterial color={side < 0 ? "#72ddff" : "#9588ff"} transparent opacity={0.68} toneMapped={false} /></mesh>
+      <mesh position={[32, -0.98, side * 5.6]}><boxGeometry args={[110, 0.025, 0.045]} /><meshBasicMaterial color={side < 0 ? "#00A8FF" : "#70B7FF"} transparent opacity={0.68} toneMapped={false} /></mesh>
       <mesh position={[32, -0.98, side * 9.4]}><boxGeometry args={[110, 0.025, 0.045]} /><meshBasicMaterial color="#c6d9e6" transparent opacity={0.42} toneMapped={false} /></mesh>
     </group>)}
 
@@ -424,7 +424,7 @@ export default function ProjectExhibitionWorld({ progress, reducedMotion, projec
     <ambientLight intensity={0.86} />
     <hemisphereLight args={["#eff7ff", "#1b2638", 1.05]} />
     <directionalLight position={[0, 12, 7]} intensity={3.1} color="#e8f4ff" />
-    <directionalLight position={[0, 8, -6]} intensity={2} color="#b7bcff" />
+    <directionalLight position={[0, 8, -6]} intensity={2} color="#C4D7F3" />
     <pointLight position={[-5, 8, 0]} intensity={52} distance={34} color="#c1dcff" />
     <Corridor reducedMotion={reducedMotion} />
     {projects.map((project, index) => <ProjectZone key={project.number} project={project} index={index} progress={progress} reducedMotion={reducedMotion} />)}
