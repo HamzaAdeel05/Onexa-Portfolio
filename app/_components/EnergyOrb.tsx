@@ -223,9 +223,16 @@ export default function OnexaOrb({
       if (target) {
         const rect = target.getBoundingClientRect();
         const targetRadius = Math.min(rect.width, rect.height) * 0.43;
-        cx = startX + (rect.left + rect.width / 2 - startX) * transition;
-        cy = startY + (rect.top + rect.height / 2 - startY) * transition;
-        R = startR + (targetRadius - startR) * transition;
+        const arrivedX = rect.left + rect.width / 2;
+        const arrivedY = rect.top + window.scrollY + rect.height / 2 - window.innerHeight;
+        const progress = transition * transition * (3 - 2 * transition);
+        cx = startX + (arrivedX - startX) * progress;
+        cy = startY + (arrivedY - startY) * progress;
+        R = startR + (targetRadius - startR) * progress;
+        if (transition >= 1) {
+          cx = arrivedX;
+          cy = rect.top + rect.height / 2;
+        }
       } else {
         cx = startX;
         cy = startY;
@@ -351,7 +358,7 @@ export default function OnexaOrb({
     const onScroll = () => {
       transition = reduce
         ? (window.scrollY > 0 ? 1 : 0)
-        : Math.min(1, Math.max(0, window.scrollY / Math.max(window.innerHeight * 0.7, 1)));
+        : Math.min(1, Math.max(0, window.scrollY / Math.max(window.innerHeight, 1)));
       poster.style.setProperty("--intro-progress", String(transition));
       if (reduce) draw(0);
       else if (targetInView()) start();

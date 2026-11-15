@@ -13,6 +13,7 @@ export default function Home() {
   return (
     <>
       <OnexaIntro />
+      <div aria-hidden="true" className="h-[100svh] w-full shrink-0" />
       <main id="main-content" tabIndex={-1}>
         <HeroSections />
         <ServicesSection />

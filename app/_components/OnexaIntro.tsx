@@ -12,7 +12,7 @@ export default function OnexaIntro() {
     const update = () => {
       const progress = reduceMotion
         ? (window.scrollY > 0 ? 1 : 0)
-        : Math.min(1, Math.max(0, window.scrollY / Math.max(window.innerHeight * 0.7, 1)));
+        : Math.min(1, Math.max(0, window.scrollY / Math.max(window.innerHeight, 1)));
       sectionRef.current?.style.setProperty("--intro-progress", String(progress));
     };
     const scheduleUpdate = () => {
