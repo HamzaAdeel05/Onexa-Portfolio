@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Line } from "@react-three/drei";
 import * as THREE from "three";
 import { getAdaptiveDpr } from "./useSceneVisibility";
-import type { DisplayKind, ExhibitionProject, SupportingDisplay } from "./SelectedWork";
+import type { ExhibitionProject } from "./SelectedWork";
 
 type WorldProps = {
   progress: { current: number };
@@ -21,95 +21,58 @@ function focusAt(progress: number, index: number, range: number) {
   return THREE.MathUtils.smoothstep(0, 1, proximity);
 }
 
-function makeDisplayTexture(label: string, kind: DisplayKind, accent: string) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 320;
-  canvas.height = 200;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return null;
+const projectTextures = new Map<string, THREE.Texture>();
+const projectTextureLoads = new Map<string, Promise<THREE.Texture>>();
 
-  ctx.fillStyle = "#101e2c";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  const wash = ctx.createLinearGradient(0, 0, 320, 200);
-  wash.addColorStop(0, `${accent}50`);
-  wash.addColorStop(1, "#09121a18");
-  ctx.fillStyle = wash;
-  ctx.fillRect(0, 0, 320, 200);
-  ctx.fillStyle = "#f0f8ff";
-  ctx.font = "600 15px Arial, sans-serif";
-  ctx.fillText(label.toUpperCase(), 15, 25, 260);
-  ctx.fillStyle = accent;
-  ctx.fillRect(15, 34, 42, 2);
-  ctx.strokeStyle = "#b8d5e244";
-  ctx.lineWidth = 1;
-  for (let y = 60; y < 185; y += 28) {
-    ctx.beginPath(); ctx.moveTo(15, y); ctx.lineTo(305, y); ctx.stroke();
-  }
+function loadProjectTexture(source: string) {
+  const cached = projectTextures.get(source);
+  if (cached) return Promise.resolve(cached);
+  const pending = projectTextureLoads.get(source);
+  if (pending) return pending;
 
-  if (kind === "chart" || kind === "analytics" || kind === "network") {
-    ctx.strokeStyle = accent;
-    ctx.globalAlpha = 0.98;
-    ctx.lineWidth = 2.6;
-    ctx.beginPath();
-    for (let i = 0; i < 12; i++) {
-      const x = 22 + i * 24;
-      const seed = label.length * 17 + i * 37;
-      const y = 159 - (Math.sin(seed) * 0.5 + 0.5) * 76;
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = `${accent}70`;
-    for (let i = 0; i < 6; i++) {
-      const height = 18 + ((i * 19 + label.length * 7) % 53);
-      ctx.fillRect(26 + i * 43, 178 - height, 15, height);
-    }
-  } else {
-    ctx.fillStyle = `${accent}24`;
-    for (let i = 0; i < 4; i++) {
-      const x = 16 + (i % 2) * 143;
-      const y = 53 + Math.floor(i / 2) * 56;
-      ctx.fillRect(x, y, 130, 44);
-      ctx.fillStyle = "#c4d8df";
-      ctx.globalAlpha = 0.75;
-      ctx.fillRect(x + 9, y + 11, 78 + (i % 2) * 18, 3);
-      ctx.globalAlpha = 0.38;
-      ctx.fillRect(x + 9, y + 21, 100, 2);
-      ctx.fillRect(x + 9, y + 29, 62, 2);
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = `${accent}36`;
-    }
-  }
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = 2;
-  return texture;
+  const request = new Promise<THREE.Texture>((resolve, reject) => {
+    new THREE.TextureLoader().load(source, (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = 4;
+      texture.minFilter = THREE.LinearMipmapLinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      projectTextures.set(source, texture);
+      projectTextureLoads.delete(source);
+      resolve(texture);
+    }, undefined, (error) => {
+      projectTextureLoads.delete(source);
+      reject(error);
+    });
+  });
+  projectTextureLoads.set(source, request);
+  return request;
 }
 
-function ScreenArtwork({ display, accent, activation, width, height }: { display: SupportingDisplay; accent: string; activation: { current: number }; width: number; height: number }) {
+function ScreenArtwork({ image, activation, width, height }: { image: string; activation: { current: number }; width: number; height: number }) {
   const material = useRef<THREE.MeshBasicMaterial>(null);
-  const texture = useRef<THREE.CanvasTexture | null>(null);
-  useEffect(() => () => { texture.current?.dispose(); texture.current = null; }, []);
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+  useEffect(() => {
+    if (texture) console.log("screen material state", image, Boolean(material.current?.map), material.current?.opacity);
+  }, [image, texture]);
+  useEffect(() => {
+    let cancelled = false;
+    loadProjectTexture(image).then((loadedTexture) => {
+      console.log("project panel texture ready", image, loadedTexture.image.width, loadedTexture.image.height);
+      if (!cancelled) setTexture(loadedTexture);
+    }).catch(() => undefined);
+    return () => { cancelled = true; };
+  }, [image]);
   useFrame(() => {
     const focus = activation.current;
-    if (!texture.current && focus > 0.32) {
-      texture.current = makeDisplayTexture(display.label, display.kind, accent);
-      if (texture.current && material.current) {
-        material.current.map = texture.current;
-        material.current.needsUpdate = true;
-      }
-    }
-    if (material.current) material.current.opacity = 0.35 + focus * 0.65;
+    if (material.current) material.current.opacity = texture ? 0.76 + focus * 0.24 : 0;
   });
   return <mesh position={[0, 0, 0.112]}>
     <planeGeometry args={[width - 0.32, height - 0.3]} />
-    <meshBasicMaterial ref={material} color="#ffffff" transparent opacity={0.2} toneMapped={false} />
+    <meshBasicMaterial ref={material} map={texture} color="#ffffff" transparent opacity={0} toneMapped={false} />
   </mesh>;
 }
 
-function SupportingScreen({ display, index, projectIndex, progress, project, reducedMotion }: {
-  display: SupportingDisplay;
+function SupportingScreen({ index, projectIndex, progress, project, reducedMotion }: {
   index: number;
   projectIndex: number;
   progress: { current: number };
@@ -135,7 +98,7 @@ function SupportingScreen({ display, index, projectIndex, progress, project, red
   return <group ref={root} position={[x, y, z]} rotation={[0, rotation, 0]}>
     <mesh castShadow><boxGeometry args={[width, height, 0.18]} /><meshPhysicalMaterial color="#0a121b" metalness={0.82} roughness={0.22} clearcoat={0.9} /></mesh>
     <mesh position={[0, 0, 0.097]}><planeGeometry args={[width - 0.12, height - 0.12]} /><meshBasicMaterial color="#0b1824" /></mesh>
-    <ScreenArtwork display={display} accent={project.accent} activation={activation} width={width} height={height} />
+    <ScreenArtwork image={project.image} activation={activation} width={width} height={height} />
     {[
       [0, height / 2, width, 0.035], [0, -height / 2, width, 0.035],
       [-width / 2, 0, 0.035, height], [width / 2, 0, 0.035, height],
@@ -153,64 +116,29 @@ const screenLayout: [number, number, number, number, number, number][] = [
   [-6.4, 2.75, 5.2, 2.25, 1.34, 0.12], [6.8, 3.0, 4.2, 2.35, 1.4, -0.12],
 ];
 
-function makeMainDisplayTexture(project: ExhibitionProject) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1100;
-  canvas.height = 560;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return null;
-  const accent = project.accent;
-  const bg = ctx.createLinearGradient(0, 0, 1100, 560);
-  bg.addColorStop(0, "#142a38"); bg.addColorStop(0.62, "#0d1d2a"); bg.addColorStop(1, "#18283a");
-  ctx.fillStyle = bg; ctx.fillRect(0, 0, 1100, 560);
-  ctx.strokeStyle = `${accent}99`; ctx.lineWidth = 2; ctx.strokeRect(2, 2, 1096, 556);
-  ctx.fillStyle = accent; ctx.font = "600 17px Arial, sans-serif";
-  ctx.fillText("ONEXA   /   PROJECT EXHIBITION", 38, 45);
-  ctx.textAlign = "right"; ctx.fillText(`LIVE SYSTEM   /   ${project.number}`, 1060, 45); ctx.textAlign = "left";
-  ctx.strokeStyle = "#b9d2de44"; ctx.beginPath(); ctx.moveTo(38, 65); ctx.lineTo(1062, 65); ctx.stroke();
-  ctx.fillStyle = accent; ctx.font = "600 15px Arial, sans-serif"; ctx.fillText(`${project.number}   /   ${project.category.toUpperCase()}`.slice(0, 66), 40, 105);
-  ctx.fillStyle = "#f1f7fa"; ctx.font = "600 44px Arial, sans-serif"; ctx.fillText(project.title, 38, 160);
-  ctx.fillStyle = "#b4c4cc"; ctx.font = "20px Arial, sans-serif";
-  const words = project.description.split(" "); let line = ""; let y = 202;
-  for (const word of words) { const test = line ? `${line} ${word}` : word; if (ctx.measureText(test).width > 500) { ctx.fillText(line, 40, y); line = word; y += 28; if (y > 282) break; } else line = test; }
-  if (line && y <= 282) ctx.fillText(line, 40, y);
-  ctx.font = "14px Arial, sans-serif"; let chipX = 40;
-  for (const chip of project.technologies.slice(0, 5)) { const w = Math.min(ctx.measureText(chip).width + 22, 190); ctx.globalAlpha = 0.18; ctx.fillStyle = accent; ctx.fillRect(chipX, 306, w, 30); ctx.globalAlpha = 0.75; ctx.strokeStyle = accent; ctx.strokeRect(chipX, 306, w, 30); ctx.globalAlpha = 1; ctx.fillStyle = "#d2e2e9"; ctx.fillText(chip, chipX + 11, 326, w - 18); chipX += w + 9; if (chipX > 525) break; }
-  const panel = ctx.createLinearGradient(590, 90, 1060, 470); panel.addColorStop(0, "#15303d"); panel.addColorStop(1, "#17283a");
-  ctx.fillStyle = panel; ctx.fillRect(590, 90, 470, 380); ctx.strokeStyle = `${accent}99`; ctx.strokeRect(590, 90, 470, 380);
-  ctx.fillStyle = "#d8e7ed"; ctx.font = "600 14px Arial, sans-serif"; ctx.fillText(project.preview.toUpperCase().slice(0, 42), 610, 120);
-  ctx.fillStyle = accent; ctx.textAlign = "right"; ctx.fillText("●  ●  ●", 1040, 120); ctx.textAlign = "left";
-  for (let i = 0; i < 3; i++) { const x = 610 + i * 142; ctx.fillStyle = "#10212b"; ctx.fillRect(x, 140, 130, 64); ctx.strokeStyle = "#b9d2de33"; ctx.strokeRect(x, 140, 130, 64); ctx.fillStyle = "#8faab5"; ctx.font = "10px Arial, sans-serif"; ctx.fillText(project.dashboardLabels[i], x + 9, 158, 112); ctx.fillStyle = i === 1 ? project.secondary : "#e7f5f8"; ctx.font = "13px Arial, sans-serif"; ctx.fillText(project.dashboardValues[i], x + 9, 190, 112); }
-  ctx.fillStyle = "#102230"; ctx.fillRect(610, 220, 430, 220); ctx.strokeStyle = "#c2e0ea44";
-  for (let gy = 254; gy < 430; gy += 42) { ctx.beginPath(); ctx.moveTo(610, gy); ctx.lineTo(1040, gy); ctx.stroke(); }
-  [48,79,62,112,91,132,105,152,124,171,139,184].forEach((height, i) => { const gradient = ctx.createLinearGradient(0, 430-height, 0, 430); gradient.addColorStop(0, i % 4 === 0 ? project.secondary : accent); gradient.addColorStop(1, `${accent}22`); ctx.fillStyle = gradient; ctx.fillRect(630 + i * 33, 430 - height, 22, height); });
-  ctx.fillStyle = "#c4d8df"; ctx.font = "600 13px Arial, sans-serif"; ctx.fillText("CAPABILITIES", 40, 390); ctx.font = "15px Arial, sans-serif";
-  project.features.slice(0, 5).forEach((feature, i) => { const fy = 422 + i * 25; ctx.fillStyle = accent; ctx.fillText("+", 42, fy); ctx.fillStyle = "#d2e1e7"; ctx.fillText(feature, 62, fy, 485); });
-  const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace; texture.anisotropy = 2; return texture;
-}
 function MainDisplay({ project, index, progress }: { project: ExhibitionProject; index: number; progress: { current: number } }) {
   const root = useRef<THREE.Group>(null);
   const glass = useRef<THREE.MeshPhysicalMaterial>(null);
   const edge = useRef<THREE.MeshStandardMaterial>(null);
   const artwork = useRef<THREE.MeshBasicMaterial>(null);
-  const texture = useRef<THREE.CanvasTexture | null>(null);
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
   const activation = useRef(0);
   const [width, height] = [12.3, 6.3];
-  useEffect(() => () => { texture.current?.dispose(); texture.current = null; }, []);
+  useEffect(() => {
+    let cancelled = false;
+    loadProjectTexture(project.image).then((loadedTexture) => {
+      console.log("main project texture ready", project.image, loadedTexture.image.width, loadedTexture.image.height);
+      if (!cancelled) setTexture(loadedTexture);
+    }).catch(() => undefined);
+    return () => { cancelled = true; };
+  }, [project.image]);
 
   useFrame((state) => {
     const focus = focusAt(progress.current, index, project.revealRange);
     activation.current = focus;
-    if (!texture.current && focus > 0.08) {
-      texture.current = makeMainDisplayTexture(project);
-      if (texture.current && artwork.current) {
-        artwork.current.map = texture.current;
-        artwork.current.needsUpdate = true;
-      }
-    }
     if (glass.current) glass.current.opacity = 0.28 + focus * 0.24;
     if (edge.current) edge.current.emissiveIntensity = 0.12 + focus * (0.92 + Math.sin(state.clock.elapsedTime * 1.1) * 0.08);
-    if (artwork.current) artwork.current.opacity = texture.current ? 0.25 + focus * 0.75 : 0;
+    if (artwork.current) artwork.current.opacity = texture ? 0.3 + focus * 0.7 : 0;
     if (root.current) root.current.scale.setScalar(0.98 + focus * 0.02);
   });
 
@@ -225,8 +153,8 @@ function MainDisplay({ project, index, progress }: { project: ExhibitionProject;
     <mesh position={[-width / 2 + 0.22, height / 2 - 0.2, 0.15]}><boxGeometry args={[0.12, 0.12, 0.025]} /><meshBasicMaterial color={project.accent} toneMapped={false} /></mesh>
     <mesh position={[width / 2 - 0.22, height / 2 - 0.2, 0.15]}><boxGeometry args={[0.12, 0.12, 0.025]} /><meshBasicMaterial color={project.secondary} toneMapped={false} /></mesh>
     <mesh position={[0, 0, 0.145]}>
-      <planeGeometry args={[width - 0.16, height - 0.16]} />
-      <meshBasicMaterial ref={artwork} transparent opacity={0} depthWrite={false} toneMapped={false} />
+      <planeGeometry args={[(height - 0.16) * (2752 / 1536), height - 0.16]} />
+      <meshBasicMaterial ref={artwork} map={texture} transparent opacity={0} depthWrite={false} toneMapped={false} />
     </mesh>
   </group>;
 }
@@ -325,7 +253,7 @@ function ProjectZone({ project, index, progress, reducedMotion }: {
   return <group position={[x, 0, 0]}>
     <pointLight ref={glow} position={[0, 4.7, -3.7]} color={project.accent} intensity={5} distance={19} decay={1.8} />
     <MainDisplay project={project} index={index} progress={progress} />
-    {project.supportingDisplays.map((display, i) => <SupportingScreen key={`${project.number}-${display.label}`} display={display} index={i} projectIndex={index} progress={progress} project={project} reducedMotion={reducedMotion} />)}
+    {project.supportingDisplays.map((display, i) => <SupportingScreen key={`${project.number}-${display.label}`} index={i} projectIndex={index} progress={progress} project={project} reducedMotion={reducedMotion} />)}
     <ProjectionPlatform project={project} index={index} progress={progress} reducedMotion={reducedMotion} />
     <mesh position={[0, 0.03, 0.15]} rotation={[-Math.PI / 2, 0, 0]}>
       <circleGeometry args={[3.1, 64]} /><meshBasicMaterial color={project.accent} transparent opacity={0.045} side={THREE.DoubleSide} toneMapped={false} />
@@ -419,6 +347,15 @@ function CameraRig({ progress, reducedMotion }: { progress: { current: number };
 }
 
 export default function ProjectExhibitionWorld({ progress, reducedMotion, projects, active }: WorldProps) {
+  useEffect(() => {
+    console.log("project exhibition mounted", projects.length);
+    return () => {
+      projectTextures.forEach((texture) => texture.dispose());
+      projectTextures.clear();
+      projectTextureLoads.clear();
+    };
+  }, [projects.length]);
+
   return <Canvas camera={{ position: [-8, 4.15, 12.8], fov: 40, near: 0.1, far: 130 }} dpr={getAdaptiveDpr()} frameloop={active ? "always" : "never"} gl={{ alpha: true, antialias: false, powerPreference: "high-performance" }}>
     <color attach="background" args={["#101925"]} />
     <ambientLight intensity={0.86} />

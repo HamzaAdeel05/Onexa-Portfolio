@@ -22,6 +22,7 @@ export type ExhibitionProject = {
   technologies: string[];
   features: string[];
   preview: string;
+  image: string;
   dashboardLabels: [string, string, string];
   dashboardValues: [string, string, string];
   demoUrl: string;
@@ -39,7 +40,7 @@ export const exhibitionProjects: ExhibitionProject[] = [
     description: "A B2B lead-generation and outreach platform. Find businesses, enrich and qualify prospects from their websites, then create tailored email campaigns and track leads through one CRM workflow.",
     technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "FastAPI", "Python", "SQLite", "Foursquare API", "Gemini AI", "SMTP"],
     features: ["Business discovery", "Website data extraction", "AI lead qualification", "Personalized email drafts", "Campaign review and sending", "Lead tracking and Excel export"],
-    preview: "B2B LEAD GENERATION DASHBOARD",
+    preview: "B2B LEAD GENERATION DASHBOARD", image: "/projects/cuibex-crm.jpg",
     dashboardLabels: ["PROSPECTING", "EMAIL OUTREACH", "LEAD PIPELINE"],
     dashboardValues: ["FIND + QUALIFY", "AI PERSONALIZED", "TRACK + MANAGE"], demoUrl: "#contact", githubUrl: "#contact",
     visualization: "business-network", accent: "#00A8FF", secondary: "#70B7FF", revealRange: 1.1,
@@ -50,7 +51,7 @@ export const exhibitionProjects: ExhibitionProject[] = [
     description: "An AI-assisted symptom assessment prototype. People describe symptoms and receive a structured, educational overview with possible explanations and urgency guidance. It is designed for informational support, not medical diagnosis.",
     technologies: ["Python", "Streamlit", "LangChain", "OpenAI API"],
     features: ["Guided symptom intake", "AI-generated assessment", "Possible explanations", "Urgency guidance", "Educational health information"],
-    preview: "SYMPTOM ASSESSMENT & HEALTH GUIDANCE",
+    preview: "SYMPTOM ASSESSMENT & HEALTH GUIDANCE", image: "/projects/mediguide-ai.jpg",
     dashboardLabels: ["SYMPTOM INPUT", "AI ASSESSMENT", "HEALTH GUIDANCE"],
     dashboardValues: ["USER PROVIDED", "EDUCATIONAL", "NOT DIAGNOSIS"], demoUrl: "#contact", githubUrl: "#contact",
     visualization: "medical-intelligence", accent: "#71e5e9", secondary: "#70B7FF", revealRange: 1.05,
@@ -61,7 +62,7 @@ export const exhibitionProjects: ExhibitionProject[] = [
     description: "A personal-finance assistant for understanding monthly cash flow. Enter income, savings, expenses, currency, and a financial goal to get spending analysis, budget ideas, and a practical action plan.",
     technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Python", "FastAPI", "LangChain", "OpenAI"],
     features: ["Income and expense breakdown", "Multiple currencies", "Goal-aware analysis", "Financial health summary", "Budget and savings recommendations", "Streaming follow-up guidance"],
-    preview: "PERSONAL FINANCE & BUDGET ANALYSIS",
+    preview: "PERSONAL FINANCE & BUDGET ANALYSIS", image: "/projects/finwise-ai.jpg",
     dashboardLabels: ["FINANCE INPUT", "AI ANALYSIS", "RECOMMENDATIONS"],
     dashboardValues: ["INCOME + SPENDING", "CASH FLOW", "NEXT STEPS"], demoUrl: "#contact", githubUrl: "#contact",
     visualization: "financial-globe", accent: "#83dfff", secondary: "#70B7FF", revealRange: 1.05,
@@ -72,7 +73,7 @@ export const exhibitionProjects: ExhibitionProject[] = [
     description: "A document-grounded question-answering assistant. Upload documents, then ask questions in natural language; it retrieves relevant passages from a FAISS index and gives the language model context for its answer.",
     technologies: ["Python", "LangChain", "Streamlit", "FAISS", "LLM API"],
     features: ["Document upload and processing", "Text chunking and embeddings", "Semantic search with FAISS", "Context-grounded answers"],
-    preview: "DOCUMENT SEARCH & QUESTION ANSWERING",
+    preview: "DOCUMENT SEARCH & QUESTION ANSWERING", image: "/projects/readme-ai.jpg",
     dashboardLabels: ["DOCUMENT UPLOAD", "RETRIEVAL", "ANSWER"],
     dashboardValues: ["YOUR SOURCES", "FAISS SEARCH", "GROUNDED"], demoUrl: "#contact", githubUrl: "#contact",
     visualization: "knowledge-graph", accent: "#a8c8ff", secondary: "#00A8FF", revealRange: 1.05,
